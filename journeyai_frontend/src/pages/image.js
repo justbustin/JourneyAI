@@ -11,21 +11,25 @@ import EXIF from 'exif-js';
 
 const IndexPage = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [albumName, setAlbumName] = useState("");
 
   const handleFileChange = (event) => {
     setSelectedFiles([...selectedFiles, ...event.target.files]);
+  };
+
+  const handleAlbumNameChange = (event) => {
+    setAlbumName(event.target.value);
   };
 
   const handleUpload = () => {
     if (selectedFiles.length > 0) {
       selectedFiles.forEach((image) => {
         EXIF.getData(image, function() {
-          const allMetaData = EXIF.pretty(this);
           const metaDataObject = EXIF.getAllTags(this);
           console.log(`Metadata for ${image.name}:`, metaDataObject);
           console.log('OG TIME:', metaDataObject.DateTimeOriginal);
           
-          const storageRef = ref(storage, `images/${image.name}`);
+          const storageRef = ref(storage, `${albumName}/${image.name}`);
           const uploadTask = uploadBytesResumable(storageRef, image);
   
           uploadTask.on(
@@ -52,8 +56,12 @@ const IndexPage = () => {
               });
               */
               
+
               const customMetadata = {
                 time: metaDataObject.DateTimeOriginal,
+                latitude: metaDataObject.GPSLatitude.toString(),
+                longitude: metaDataObject.GPSLongitude.toString()
+
               };
 
 
@@ -74,8 +82,16 @@ const IndexPage = () => {
   };
 
   return (
-    <div id="imagePageContainer">
-      <h1 className="heading">Upload Multiple Files Example</h1>
+    <div>
+      <h1>Upload Multiple Files Example</h1>
+      <div style={{ display: 'flex', justifyContent: 'center' }}> 
+      <input
+        type="text"
+        placeholder="Enter album name"
+        value={albumName}
+        onChange={handleAlbumNameChange}
+      />
+      </div>
       <UploadFileBox onChange={handleFileChange} />
       {selectedFiles.length > 0 && (
         <div>
