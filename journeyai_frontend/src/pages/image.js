@@ -1,5 +1,7 @@
 // pages/index.js
 
+
+import "../styles/image.scss"
 import React, { useState } from 'react';
 import UploadFileBox from '../components/UploadFileBox';
 import { storage } from "../app/firebase";
@@ -72,8 +74,8 @@ const IndexPage = () => {
   };
 
   return (
-    <div>
-      <h1>Upload Multiple Files Example</h1>
+    <div id="imagePageContainer">
+      <h1 className="heading">Upload Multiple Files Example</h1>
       <UploadFileBox onChange={handleFileChange} />
       {selectedFiles.length > 0 && (
         <div>
