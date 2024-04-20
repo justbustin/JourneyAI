@@ -1,5 +1,7 @@
 // pages/index.js
 
+
+import "../styles/image.scss"
 import React, { useState } from 'react';
 import UploadFileBox from '../components/UploadFileBox';
 import { storage } from "../app/firebase";
