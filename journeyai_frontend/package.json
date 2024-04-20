@@ -17,6 +17,11 @@
     "leaflet-routing-machine": "^3.2.12",
     "firebase": "^10.11.0",
     "next": "14.2.2",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "sass": "^1.75.0"
     "react": "^18.2.0",
     "react-dom": "^18",
     "react-leaflet": "^4.2.1",
