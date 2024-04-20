@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { model } from '@/app/gemini'
+import { Button, TextField } from '@mui/material';
+import "../styles/ImageHover.scss";
+
 
 const ImageHover = () => {
   const [chat, setChat] = useState(null);
   const [message, setMessage] = useState("");
   const [history, setHistory] = useState([]);
+
+
+  const [askQuestion, setAskQuestion] = useState(false);
 
   useEffect(() => {
     const chat = model.startChat({
@@ -52,10 +58,15 @@ const ImageHover = () => {
           );
         })}
       </div>
-      <input value={message} onChange={(e) => setMessage(e.target.value)} />
-      <button onClick={() => handleSend(message)}>
+      <Button>Ask a Question</Button>
+      <TextField value={message} onChange={(e) => setMessage(e.target.value)} />
+
+      <Button onClick={() => handleSend(message)}>
         Send
-      </button>
+      </Button>
+      <div className='hello'>
+        Hello
+      </div>
     </div >
   )
 }
