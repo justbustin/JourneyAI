@@ -11,14 +11,20 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@google/generative-ai": "^0.7.1",
     "@mui/material": "^5.15.15",
-    "leaflet": "^1.9.4",
-    "leaflet-routing-machine": "^3.2.12",
+    "exif-js": "^2.3.0",
     "firebase": "^10.11.0",
+    "leaflet-routing-machine": "^3.2.12",
     "next": "14.2.2",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18",
     "react-leaflet": "^4.2.1",
-    "react-leaflet-routing-machine": "^0.0.5"
+    "react-leaflet-routing-machine": "^0.0.5",
+    "sass": "^1.75.0"
   }
 }
