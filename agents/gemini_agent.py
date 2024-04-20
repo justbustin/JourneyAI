@@ -27,16 +27,17 @@ firebase_admin.initialize_app(cred, {
     'storageBucket': 'lahacks-8dda9.appspot.com'  # Use your actual storage bucket name
 })
 
+AGENT_MAILBOX_KEY = "ab0cd521-5574-4238-b52f-377e55f759b5"
 # agent1qg592765d2lwmrya9rvdk2m0hw6g4qhaeywjupv3pxz2ycx5gzvw22fp2zr
 gemini_agent = Agent(
     name="Gemini Agent",  
     seed="Gemini Agent Seed Phrase",
+    mailbox=f"{AGENT_MAILBOX_KEY}@https://agentverse.ai",
     port=8003,  
     endpoint="http://localhost:8003/submit",  
 )
 print(gemini_agent.address)
  
-img = PIL.Image.open('./testone.png')
 
 load_dotenv()
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
@@ -58,7 +59,7 @@ def call_gemini(photo):
 
     response = model.generate_content(["Describe the location and area associated using what can be seen in the image, but most importantly from the longitude and latitude given. ignore people if any. Provide fun facts about the specific landmarks so that user can look into each thing more. latitude: " + photo.latty + " longitude: " + photo.longy, img], stream=True)
     response.resolve()
-
+    print(response.text)
     return response.text
 
  

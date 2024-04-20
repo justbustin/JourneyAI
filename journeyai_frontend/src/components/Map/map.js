@@ -62,7 +62,7 @@ const Map = ({points}) => {
         {points.map((point, index) => (
         <Marker eventHandlers={{ click: handleMarkerClick }} key={index} position={[point[0], point[1]]} />
       ))}
-        {/* <Routing points={points} /> */}
+        { <Routing points={points} /> }
       </MapContainer>
     </div>
   );

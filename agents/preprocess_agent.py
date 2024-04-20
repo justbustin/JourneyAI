@@ -14,23 +14,12 @@ from firebase_admin import db
 import os
 import PIL.Image
 
-img = PIL.Image.open('./testone.png')
-
-load_dotenv()
-GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
-
-genai.configure(api_key=GOOGLE_API_KEY)
-
-model = genai.GenerativeModel('gemini-1.5-pro-latest')
-
-#response = model.generate_content(["Describe the location and area associated in the background. Provide fun facts about the specific landmarks so that user can look into each thing more. Use this metadata to assist in the information: 35.65934° N, 139.70065° E Shibuya - dogenzaka", img], stream=True)
-#response.resolve()
-
-#print(response.text)
- 
+AGENT_MAILBOX_KEY = "3dca76ba-72d2-411b-baf6-5e90df57c163"
+# agent1qgfytc9e7ketwqc06xndvjmznqgr3md8w43hzxdv2hasp25ya43j2mnd32e
 alice = Agent(
     name="Query Agent",  
     seed="Query Agent Seed Phrase",
+    mailbox=f"{AGENT_MAILBOX_KEY}@https://agentverse.ai",
     port=8001,  
     endpoint="http://localhost:8001/submit",  
 )
