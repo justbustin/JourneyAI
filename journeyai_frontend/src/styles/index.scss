@@ -1,0 +1,66 @@
+@import 'globals.scss';
+@import 'variables';
+
+#homePageContainer {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    background-image: url("/journeyAIBackground.png");
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+}
+
+#logo {
+    padding: 0px 10px 0px 10px;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+// .link:hover::after {
+//     content: " →";
+// }
+
+#logo {
+    opacity: 0; /* Start with opacity 0 to make the text invisible */
+    animation: fadeIn 5s ease forwards; /* Apply the fadeIn animation */
+}
+  
+@keyframes fadeIn {
+from {
+    opacity: 0; /* Start with opacity 0 */
+}
+to {
+    opacity: 1; /* Gradually increase opacity to 1 */
+}
+}
+
+.enterButton {
+    width: 100%;
+    background-color: #D9EEEF;
+    color: black;
+    border-radius: 32px;
+    border: solid 1.5px black;
+    font-size: 2.5vw;
+    padding: 10px 25px 10px 25px;
+    height: 100%;
+}
+
+.enterButton:hover {
+    background-color: #D9EEEF;
+}
+
+.link {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.btnContainer {
+    border-radius: 32px;
+    margin-top: 4em;
+}

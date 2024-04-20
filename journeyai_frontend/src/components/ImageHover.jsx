@@ -53,7 +53,7 @@ const ImageHover = () => {
         {history.map((msg, index) => {
           return (
             <div key={index}>
-              {msg.role}: {msg.parts[0].text}
+              {msg.role}: {msg.parts[0] == undefined ? "hello" : msg.parts[0].text}
             </div>
           );
         })}
