@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { model } from '@/app/gemini'
 import { Button, TextField } from '@mui/material';
-import "../styles/ImageHover.scss";
+import "../styles/imageHover.scss";
 
 
 const ImageHover = () => {
@@ -53,7 +53,7 @@ const ImageHover = () => {
         {history.map((msg, index) => {
           return (
             <div key={index}>
-              {msg.role}: {msg.parts[0].text}
+              {msg.role}: {msg.parts[0] == undefined ? "hello" : msg.parts[0].text}
             </div>
           );
         })}

@@ -4,9 +4,10 @@
 import "../styles/image.scss"
 import React, { useState } from 'react';
 import UploadFileBox from '../components/UploadFileBox';
-import { storage } from "../app/firebase";
+import { storage, firestore} from "../app/firebase";
 import { ref, uploadBytesResumable, updateMetadata, getMetadata } from "firebase/storage";
-
+import { Button, TextField } from "@mui/material";
+import { collection, doc, setDoc } from "firebase/firestore";
 import EXIF from 'exif-js';
 
 const IndexPage = () => {
@@ -42,28 +43,11 @@ const IndexPage = () => {
               console.log(error.message);
             },
             () => {
-              /*
-              const customMetadata = { metadata: allMetaData };
-              const fileRef = ref(storage, uploadTask.snapshot.ref.fullPath);
-
-              getMetadata(storageRef)
-              .then((metadata) => {
-                const storageObjectId = metadata.fullPath; // This is the Storage Object ID
-                console.log("Storage Object ID:", storageObjectId);
-              })
-              .catch((error) => {
-              // Handle metadata retrieval error
-              });
-              */
-              
-
               const customMetadata = {
                 time: metaDataObject.DateTimeOriginal,
                 latitude: metaDataObject.GPSLatitude.toString(),
                 longitude: metaDataObject.GPSLongitude.toString()
-
               };
-
 
               updateMetadata(storageRef, {customMetadata})
                 .then((metadata) => {
@@ -73,7 +57,22 @@ const IndexPage = () => {
                 .catch((error) => {
                   console.error("Error updating metadata:", error);
                 });
-              
+
+              const collectionRef = collection(firestore, `${albumName}`);
+              const customDocId = `${image.name}`;
+              const dataToStore = {
+                  message: ''
+              };
+
+              const docRef = doc(collectionRef, customDocId);
+              setDoc(docRef, dataToStore)
+                .then(() => {
+                  console.log('Document successfully written!');
+                })
+                .catch((error) => {
+                  console.error('Error writing document: ', error);
+                });
+
             }
           );
         });
@@ -82,10 +81,15 @@ const IndexPage = () => {
   };
 
   return (
-    <div>
-      <h1>Upload Multiple Files Example</h1>
-      <div style={{ display: 'flex', justifyContent: 'center' }}> 
-      <input
+    <div id="imagePageContainer">
+        <div id="title">
+            <h1>
+            Create your journey
+            </h1>
+        </div>
+      <div id="textInputContainer"> 
+      <TextField
+        id="textInput"
         type="text"
         placeholder="Enter album name"
         value={albumName}
@@ -97,13 +101,18 @@ const IndexPage = () => {
         <div>
           <h2>Selected Files:</h2>
           <ul>
-            {selectedFiles.map((file, index) => (
-              <li key={index}>{file.name}</li>
-            ))}
+          {selectedFiles.slice(0, 4).map((file, index) => (
+            <li key={index}>{file.name}</li>
+        ))}
+        {selectedFiles.length > 4 && (
+            <li id="extra">+ {selectedFiles.length - 4} more</li>
+        )}
           </ul>
         </div>
       )}
-      <button onClick={handleUpload}>Upload</button>
+      <div className="btnContainer">
+        <Button className="uploadButton" onClick={handleUpload}>Upload</Button>
+      </div>
     </div>
   );
 };
