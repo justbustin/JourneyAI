@@ -33,7 +33,7 @@ const IndexPage = () => {
           uploadTask.on(
             "state_changed",
             (snapshot) => {
-              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              const progress = (s43napshot.bytesTransferred / snapshot.totalBytes) * 100;
               console.log(`Upload is ${progress}% done`);
             },
             (error) => {
