@@ -1,9 +1,19 @@
+@import 'globals.scss';
+@import 'variables';
+
 #infoPageContainer {
-    padding: 2em;
+    background-color: $primary-color;
     width: 100%;
     height: 100vh;
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
 }
 
 .mapContainer {
-    width: 100%;
+    width: 50%;
+}
+
+.textContainer {
+    width: 50%;
 }

@@ -6,11 +6,11 @@ export default function Info() {
 
   return (
     <div id="infoPageContainer">
-        <div>
+        <div className="textContainer">
         <ImageHover/>
         </div>
-        <div class="mapContainer">
-        <Map points={[[51.505, -0.09],[51.51, 10.5],[51.51, -10.5]]}/>
+        <div className="mapContainer">
+        <Map points={[[51.505, -0.09],[51.51, 10.5],[53.51, -10.5]]}/>
         </div>
     </div>
   );
