@@ -41,7 +41,7 @@ const IntroMap = () => {
       <div>
         {text}
       </div>
-      <MapContainer center={[34.068920,-118.445183]} zoom={12} style={{ height: '100%' }} closePopupOnClick zoomControl={false}>
+      <MapContainer center={[34.068920,-118.445183]} zoom={12} style={{ height: '100%' }} closePopupOnClick zoomControl={false} attributionControl={false}>
         <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"/>
         <Marker eventHandlers={{ click: handleMarkerClick }} position={[34.068920,-118.445183]} icon={customIcon} />
         {/* <Polyline positions={points.map(point => [point[0], point[1]])} color="green" /> */}

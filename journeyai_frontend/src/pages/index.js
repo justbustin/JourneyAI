@@ -13,12 +13,13 @@ export default function Home() {
         <div id="logoContainer">
         <img id="logo" src="/logo.png" alt="JourneyAI"/>
         </div>
+        <div className="typingContainer">
+        <TypingAnimation texts={['Embark on a trip through your memories', 'Create new journeys']} typingSpeed={100} />
+        </div>
         <div className="btnContainer">
         <Link className="link" href="/image"><Button className="enterButton">click to start</Button></Link>
         </div>
-        <div>
-        <TypingAnimation texts={['Embark on a trip through your memories', 'Text 2', 'Text 3']} typingSpeed={150} />
-        </div>
+       
       </div>
         <div className="introMapContainer">
         <IntroMap/>
