@@ -10,8 +10,20 @@ export default function Info() {
         <ImageHover/>
         </div>
         <div class="mapContainer">
-        <Map />
+        <Map points={[[51.505, -0.09],[51.51, 10.5],[51.51, -10.5]]}/>
         </div>
     </div>
   );
 }
+
+// export async function getServerSideProps() {
+//   // Fetch points from backend
+//   // const response = await fetch('your-backend-endpoint');
+//   // const points = await response.json();
+
+//   return {
+//     props: {
+//       points,
+//     },
+//   };
+// }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, CircleMarker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css'; // Import routing machine CSS
 import Routing from './route';
@@ -10,7 +10,7 @@ import { collection, onSnapshot } from "firebase/firestore";
 
 // Dynamically import the ReactLeafletRouting component with ssr set to false
 
-const Map = () => {
+const Map = ({points}) => {
 
   const collectionRef = collection(firestore, "123");
   const watcher = onSnapshot(collectionRef, (snapshot) => {
@@ -46,6 +46,12 @@ const Map = () => {
 
   }, [text]);
 
+
+  const handleMarkerClick = () => {
+    console.log('Marker clicked!');
+    // Add your custom logic here
+  };
+
   return (
     <div style={{ height: '100vh' }}>
       <div>
@@ -53,9 +59,10 @@ const Map = () => {
       </div>
       <MapContainer center={[51.505, -0.09]} zoom={13} style={{ height: '100%' }} closePopupOnClick>
         <TileLayer url="https://tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=0e29fe17ee264ba3b1c09f4751bc43c1"/>
-        <Marker position={startPoint}/>
-        <Marker position={endPoint} />
-        <Routing />
+        {points.map((point, index) => (
+        <Marker eventHandlers={{ click: handleMarkerClick }} key={index} position={[point[0], point[1]]} />
+      ))}
+        {/* <Routing points={points} /> */}
       </MapContainer>
     </div>
   );
