@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { model } from '@/app/gemini'
 import { Button, TextField } from '@mui/material';
-import "../styles/ImageHover.scss";
+import "../styles/imageHover.scss";
 
 
 const ImageHover = () => {
