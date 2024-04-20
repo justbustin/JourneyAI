@@ -54,8 +54,12 @@ const IndexPage = () => {
               });
               */
               
+
               const customMetadata = {
                 time: metaDataObject.DateTimeOriginal,
+                latitude: metaDataObject.GPSLatitude.toString(),
+                longitude: metaDataObject.GPSLongitude.toString()
+
               };
 
 
