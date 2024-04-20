@@ -6,6 +6,7 @@ const UploadFileBox = ({ onChange }) => {
   const [thumbnails, setThumbnails] = useState([]);
 
   const handleFileChange = (event) => {
+    onChange(event);
     const files = event.target.files;
     const fileThumbnails = [];
 
@@ -23,6 +24,7 @@ const UploadFileBox = ({ onChange }) => {
       reader.readAsDataURL(file);
     }
   };
+
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', minHeight: '400px' }}>
