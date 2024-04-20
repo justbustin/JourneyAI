@@ -8,9 +8,11 @@ import { storage, firestore } from "../app/firebase";
 import { ref, uploadBytesResumable, updateMetadata, getMetadata } from "firebase/storage";
 import { Button, TextField } from "@mui/material";
 import { collection, doc, setDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 import EXIF from 'exif-js';
 
 const IndexPage = () => {
+  const router = useRouter();
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [albumName, setAlbumName] = useState("");
 
@@ -77,6 +79,8 @@ const IndexPage = () => {
           );
         });
       });
+
+      router.push("/info");
     }
   };
 
