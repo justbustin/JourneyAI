@@ -19,6 +19,7 @@
     "heic2any": "^0.0.4",
     "leaflet-routing-machine": "^3.2.12",
     "next": "14.2.2",
+    "python-shell": "^5.0.0",
     "react": "^18",
     "react-dom": "^18",
     "sharp": "^0.33.3"
