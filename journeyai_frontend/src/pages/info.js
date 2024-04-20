@@ -1,9 +1,10 @@
-import ImageHover from "@/components/ImageHover";
-
+import Map from "@/components/Map";
 export default function Info() {
+
   return (
     <div>
-      <ImageHover />
+      Hello World
+      <Map />
     </div>
   );
 }
