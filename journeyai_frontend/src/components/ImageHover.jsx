@@ -112,7 +112,7 @@ const ImageHover = ({ generatedText, coord }) => {
             !askQuestion &&
             (
               <div className="buttonsContainer">
-                <CustomButton variant="contained" onClick={() => handleSend("Can you tell me more about this place or give me an interesting fact?")}>Learn More</CustomButton>
+                <CustomButton variant="contained" onClick={() => handleSend("Can you tell me something you haven't said yet about this place?")}>Learn More</CustomButton>
                 <CustomButton variant="contained" onClick={() => handleAskQuestion()}>Ask Your Own Question</CustomButton>
               </div>)
           }
