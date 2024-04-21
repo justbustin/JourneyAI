@@ -31,6 +31,7 @@ const Map = ({ album }) => {
   const [hovering, setHovering] = useState(false);
   const [imageURLs, setImageURLs] = useState([]);
   const [coords, setCoords] = useState([])
+  const [time, setTime] = useState("")
   const [loading, setLoading] = useState(true)
   const [generatedText, setGeneratedText] = useState([])
   const [index, setIndex] = useState(0);  
@@ -43,17 +44,20 @@ const Map = ({ album }) => {
       const list = await listAll(listRef);
       const temp_urls = [];
       const temp_coords = [];
+      const temp_times = [];
       for (let i = 0; i < list.items.length; i++) {
         const item = list.items[i];
         const url = await getDownloadURL(item);
         const metadata = await getMetadata(item);
         temp_urls.push(url);
         const coord = [ParseDMS(metadata.customMetadata.latitude), ParseDMS(metadata.customMetadata.longitude)];
+        const time = metadata.customMetadata.time
+        temp_times.push(time)
         temp_coords.push(coord);
       }
       setImageURLs(temp_urls);
       setCoords(temp_coords);
-
+      setTime(temp_times)
 
     };
     getList();
@@ -122,11 +126,12 @@ const Map = ({ album }) => {
       }
       {
         coords.length > 0 &&
-        <MapContainer center={[coords[0][0], coords[0][1]]} zoom={13} style={{ height: '100%', flexGrow: 1 }} closePopupOnClick>
+        <MapContainer center={[coords[0][0], coords[0][1]]} zoom={13} style={{ height: '100%', flexGrow: 1 }} closePopupOnClick attributionControl={false} zoomControl={false}>
           <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png" />
           {coords.map((coord, index) => (
             <ZoomableMarker
               position={coord}
+              time={time[index]}
               imageURL={imageURLs[index]}
               index={index}
               onClick={handleMarkerClick}
@@ -141,16 +146,40 @@ const Map = ({ album }) => {
   
 };
 
-const ZoomableMarker = ({ position, imageURL, index, onClick }) => {
+const ZoomableMarker = ({ position, time, imageURL, index, onClick }) => {
   const map = useMap();
   const [hovering, setHovering] = useState(false)
   const [iconSize, setIconSize] = useState([100, 160]);
 
   const targetZoomLevel = 17;  // Set your desired zoom level here
+    
+  const timeString = time;
+
+  const formattedString = timeString.replace(/(\d{4}):(\d{2}):(\d{2})/, '$1-$2-$3');
+
+  const dateTime = new Date(formattedString);
+
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+
+  const readableDate = dateTime.toLocaleDateString('en-US', options);
+
+  console.log(readableDate);  // Outputs: "April 5, 2024"
+
+
 
   const customIcon = (url) => {
-    return L.icon({
-      iconUrl: url, // URL or path to the icon image
+    return L.divIcon({
+      html: hovering ? `<div style="text-align: center; position: relative;">
+             <div style="color: white; font-size: 30px; font-weight: bold; padding: 2px 4px; border-radius: 8px; position: absolute; left: 50%; transform: translateX(-50%); top: -40px;">
+              ${readableDate}   <!-- Text above the marker -->
+             </div>
+             <img src="${url}" style="width: ${iconSize[0]}px; height: ${iconSize[1]}px;">  <!-- Marker icon -->
+           </div>` : `<div style="text-align: center; position: relative;">
+           <div style="color: white; font-size: 30px; font-weight: bold; padding: 2px 4px; border-radius: 8px; position: absolute; left: 50%; transform: translateX(-50%); top: -40px;">
+              <!-- Text above the marker -->
+           </div>
+           <img src="${url}" style="width: ${iconSize[0]}px; height: ${iconSize[1]}px;">  <!-- Marker icon -->
+         </div>`,
       iconSize: iconSize, // Size of the icon
       iconAnchor: [iconSize[0] / 2, iconSize[1] / 2], // Anchor point of the icon, relative to its top left corner
     });
@@ -167,7 +196,7 @@ const ZoomableMarker = ({ position, imageURL, index, onClick }) => {
     }
 
     if (!hovering) {
-      setIconSize([20 * 15, 30 * 15])
+      setIconSize([20 * 18, 30 * 18])
     }
     else {
       setIconSize([100, 160])

@@ -10,9 +10,18 @@ export default function Info() {
   console.log(album);
 
   return (
-    <div id="infoPageContainer">
-      <div className="mapContainer">
-        <Map album={album} />
+    <div>
+      <div className="logoSection">
+    <div id="logoContainer">
+        <a href="/choices">
+    <img id="logo" src="/logo.png" alt="JourneyAI"/>
+    </a>
+    </div>
+    </div>
+      <div id="infoPageContainer">
+        <div className="mapContainer">
+          <Map album={album} />
+        </div>
       </div>
     </div>
   );

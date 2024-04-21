@@ -35,6 +35,7 @@ const TripSlider = ({ trips }) => {
           z-index: 1;
           overflow-y: auto;
           color: white;
+          padding-top: 100px;
         }
 
         .tripList {

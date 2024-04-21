@@ -3,6 +3,7 @@ import { model } from '@/app/gemini'
 import { Button, TextField } from '@mui/material';
 import "../styles/imageHover.scss";
 import { styled } from '@mui/material/styles';
+import TypingChat from './ChatTyping';
 
 const CustomTextField = styled(TextField)({
   backgroundColor: "white",
@@ -44,9 +45,9 @@ const ImageHover = ({ generatedText, coord }) => {
   const [chat, setChat] = useState(null);
   const [message, setMessage] = useState("");
   const [history, setHistory] = useState([]);
-
-
+  const [mainHistory, setMainHistory] = useState([]);
   const [askQuestion, setAskQuestion] = useState(false);
+  const [askMainQuestion, setAskMainQuestion] = useState(false);
 
   useEffect(() => {
     console.log("gentext", generatedText)
@@ -67,7 +68,8 @@ const ImageHover = ({ generatedText, coord }) => {
     });
 
     setChat(chat);
-    setHistory(chat._history);
+    setHistory([...chat._history]);
+    setMainHistory([...chat._history]);
   }, [])
 
   const handleSend = async (msg) => {
@@ -77,7 +79,19 @@ const ImageHover = ({ generatedText, coord }) => {
     const response = await result.response;
     const text = response.text();
     console.log(text);
-    setHistory([...history, { role: "user", parts: [{ text: msg }] }, { role: "model", parts: [{ text: text }] }]);
+    console.log("setting history2")
+    setHistory([history[0], history[1], { role: "user", parts: [{ text: msg }] }, { role: "model", parts: [{ text: text }] }]);
+  }
+
+  const handleMainSend = async (msg) => {
+    const formatted_message = `Can you answer this question ${msg} in less than 40 words? Do not mention the word count and do not use markdown syntax.`
+    setMessage("");
+    const result = await chat.sendMessage(formatted_message);
+    const response = await result.response;
+    const text = response.text();
+    console.log(text);
+    console.log("setting history2")
+    setMainHistory([history[0], history[1], { role: "user", parts: [{ text: msg }] }, { role: "model", parts: [{ text: text }] }]);
   }
 
   const onSelectionChange = (e) => {
@@ -91,7 +105,11 @@ const ImageHover = ({ generatedText, coord }) => {
 
 
   const handleAskQuestion = () => {
-    setAskQuestion(!askQuestion)
+    setAskQuestion(!askQuestion);
+  }
+
+  const handleAskMainQuestion = () => {
+    setAskMainQuestion(!askMainQuestion);
   }
 
   return (
@@ -101,10 +119,10 @@ const ImageHover = ({ generatedText, coord }) => {
           <div style={{ padding: 10, fontWeight: "bolder" }}>
             {selectedText}
           </div>
-          {history.splice(2).map((msg, index) => {
+          {history.slice(2).map((msg, index) => {
             return (
               <div key={index} style={{ padding: 10 }}>
-                {index % 2 == 0 || msg.parts[0] == undefined ? "" : msg.parts[0].text}
+                {index % 2 == 0 || msg.parts[0] == undefined ? "" : <TypingChat onSelectionChange={onSelectionChange} word={msg.parts[0].text}/>}
               </div>
             );
           })}
@@ -130,8 +148,37 @@ const ImageHover = ({ generatedText, coord }) => {
       }
       <div>
         <div onMouseUp={onSelectionChange} key={1} style={{ padding: 10 }}>
-          {history[1].parts[0] == undefined ? "" : history[1].parts[0].text}
+          {//history[1].parts[0] == undefined ? "" : history[1].parts[0].text
+          }
+          <ReactMarkdown children={history[1].parts[0].text}/>
         </div>
+        {mainHistory.slice(2).map((msg, index) => {
+          return (
+            <div key={index} style={{ padding: 10 }}>
+              {index % 2 == 0 || msg.parts[0] == undefined ? "" : <TypingChat onSelectionChange={onSelectionChange} word={msg.parts[0].text}/>}
+            <div onMouseUp={onSelectionChange} key={index} style={{ padding: 10 }}>
+              {index % 2 == 0 || msg.parts[0] == undefined ? "" : msg.parts[0].text}
+            </div>
+          );
+        })}
+        {
+          !askMainQuestion &&
+          (
+            <div className="buttonsContainer">
+              <CustomButton variant="contained" onClick={() => handleMainSend("Can you tell me something you haven't said yet about this place?")}>Learn More</CustomButton>
+              <CustomButton variant="contained" onClick={() => handleAskMainQuestion()}>Ask Your Own Question</CustomButton>
+            </div>)
+        }
+        {
+          askMainQuestion &&
+          (<div>
+            <CustomTextField value={message} onChange={(e) => setMessage(e.target.value)} />
+            <CustomButton onClick={() => handleAskMainQuestion()}> Back </CustomButton>
+            <CustomButton onClick={() => handleMainSend(message)}>
+              Send
+            </CustomButton>
+          </div>)
+        }
       </div>
     </div >
   )
