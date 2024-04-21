@@ -2,9 +2,45 @@ import React, { useEffect, useState } from 'react'
 import { model } from '@/app/gemini'
 import { Button, TextField } from '@mui/material';
 import "../styles/imageHover.scss";
+import { styled } from '@mui/material/styles';
 
+const CustomTextField = styled(TextField)({
+  backgroundColor: "white",
+  margin: 1,
+  '& label.Mui-focused': {
+    color: 'black',
+  },
+  '& .MuiInput-underline:after': {
+    borderBottomColor: '#B2BAC2',
+  },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: '#E0E3E7',
+    },
+    '&:hover fieldset': {
+      borderColor: '#B2BAC2',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: '#6F7E8C',
+    },
+  },
+})
+
+const CustomButton = styled(Button)({
+  margin: 3,
+  backgroundColor: 'white',
+  color: 'black',
+  borderRadius: 8,
+  '&:hover': {
+    backgroundColor: 'black',
+    color: "white",
+    borderColor: 'white',
+    boxShadow: 'none',
+  },
+});
 
 const ImageHover = ({ generatedText, coord }) => {
+  const [selectedText, setSelectedText] = useState("");
   const [chat, setChat] = useState(null);
   const [message, setMessage] = useState("");
   const [history, setHistory] = useState([]);
@@ -31,22 +67,22 @@ const ImageHover = ({ generatedText, coord }) => {
     });
 
     setChat(chat);
-
-    const history = [...chat._history]
-    history.splice(0, 1)
-    setHistory(history);
+    setHistory(chat._history);
   }, [])
 
   const handleSend = async (msg) => {
+    const formatted_message = `Can you answer this question ${msg} based on the following highlighted text: ${selectedText} in less than 40 words? Do not mention the word count and do not use markdown syntax.`
     setMessage("");
-    const result = await chat.sendMessage(msg);
+    const result = await chat.sendMessage(formatted_message);
     const response = await result.response;
     const text = response.text();
     console.log(text);
-    
-    const updatedHistory = [...chat._history];
-    updatedHistory.splice(0, 1); // Same here
-    setHistory(updatedHistory);
+    setHistory([...history, { role: "user", parts: [{ text: msg }] }, { role: "model", parts: [{ text: text }] }]);
+  }
+
+  const onSelectionChange = (e) => {
+    console.log(document.getSelection().toString());
+    setSelectedText(document.getSelection().toString());
   }
 
   if (!chat) {
@@ -59,34 +95,44 @@ const ImageHover = ({ generatedText, coord }) => {
   }
 
   return (
-    <div style={{ width: '25%', height: "100%", overflow: "scroll", color: "#FFFFFF" }}>
+    <div style={{ width: '25%', height: "100%", overflow: "scroll", color: "#FFFFFF", scrollbarWidth: "thin" }}>
+      {selectedText &&
+        <div className="selectedChat">
+          <div style={{ padding: 10, fontWeight: "bolder" }}>
+            {selectedText}
+          </div>
+          {history.splice(2).map((msg, index) => {
+            return (
+              <div key={index} style={{ padding: 10 }}>
+                {index % 2 == 0 || msg.parts[0] == undefined ? "" : msg.parts[0].text}
+              </div>
+            );
+          })}
+          {
+            !askQuestion &&
+            (
+              <div className="buttonsContainer">
+                <CustomButton variant="contained" onClick={() => handleSend("Can you tell me more about this place or give me an interesting fact?")}>Learn More</CustomButton>
+                <CustomButton variant="contained" onClick={() => handleAskQuestion()}>Ask Your Own Question</CustomButton>
+              </div>)
+          }
+          {
+            askQuestion &&
+            (<div>
+              <CustomTextField value={message} onChange={(e) => setMessage(e.target.value)} />
+              <CustomButton onClick={() => handleAskQuestion()}> Back </CustomButton>
+              <CustomButton onClick={() => handleSend(message)}>
+                Send
+              </CustomButton>
+            </div>)
+          }
+        </div>
+      }
       <div>
-        {history.map((msg, index) => {
-          return (
-            <div key={index} style={{ fontWeight: `${(index % 2 == 0) ? "bold" : "normal"}`, padding: 10 }}>
-              {msg.parts[0] == undefined ? "hello" : msg.parts[0].text}
-            </div>
-          );
-        })}
+        <div onMouseUp={onSelectionChange} key={1} style={{ padding: 10 }}>
+          {history[1].parts[0] == undefined ? "" : history[1].parts[0].text}
+        </div>
       </div>
-      {
-        !askQuestion &&
-        (
-          <div className="buttonsContainer">
-            <Button onClick={() => handleSend("Can you tell me more about this place?")}>Learn More</Button>
-            <Button onClick={() => handleAskQuestion()}>Ask Your Own Question</Button>
-          </div>)
-      }
-      {
-        askQuestion &&
-        (<div>
-          <TextField value={message} onChange={(e) => setMessage(e.target.value)} />
-          <Button onClick={() => handleAskQuestion()}> Back </Button>
-          <Button onClick={() => handleSend(message)}>
-            Send
-          </Button>
-        </div>)
-      }
     </div >
   )
 }
