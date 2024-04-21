@@ -67,10 +67,7 @@ const ImageHover = ({ generatedText, coord }) => {
     });
 
     setChat(chat);
-
-    const history = [...chat._history]
-    history.splice(0, 1)
-    setHistory(history);
+    setHistory(chat._history);
   }, [])
 
   const handleSend = async (msg) => {
@@ -132,9 +129,6 @@ const ImageHover = ({ generatedText, coord }) => {
         </div>
       }
       <div>
-        <div onMouseUp={onSelectionChange} key={0} style={{ fontWeight: "bold", padding: 10 }}>
-          {history[0].parts[0] == undefined ? "" : history[0].parts[0].text}
-        </div>
         <div onMouseUp={onSelectionChange} key={1} style={{ padding: 10 }}>
           {history[1].parts[0] == undefined ? "" : history[1].parts[0].text}
         </div>
