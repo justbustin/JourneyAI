@@ -44,8 +44,6 @@ const ImageHover = ({ generatedText, coord }) => {
   const [chat, setChat] = useState(null);
   const [message, setMessage] = useState("");
   const [history, setHistory] = useState([]);
-
-
   const [askQuestion, setAskQuestion] = useState(false);
 
   useEffect(() => {
@@ -67,7 +65,8 @@ const ImageHover = ({ generatedText, coord }) => {
     });
 
     setChat(chat);
-    setHistory(chat._history);
+    console.log("setting history")
+    setHistory([...chat._history]);
   }, [])
 
   const handleSend = async (msg) => {
@@ -77,7 +76,8 @@ const ImageHover = ({ generatedText, coord }) => {
     const response = await result.response;
     const text = response.text();
     console.log(text);
-    setHistory([...history, { role: "user", parts: [{ text: msg }] }, { role: "model", parts: [{ text: text }] }]);
+    console.log("setting history2")
+    setHistory([history[0], history[1], { role: "user", parts: [{ text: msg }] }, { role: "model", parts: [{ text: text }] }]);
   }
 
   const onSelectionChange = (e) => {
@@ -91,6 +91,7 @@ const ImageHover = ({ generatedText, coord }) => {
 
 
   const handleAskQuestion = () => {
+    console.log(history);
     setAskQuestion(!askQuestion)
   }
 
@@ -101,7 +102,7 @@ const ImageHover = ({ generatedText, coord }) => {
           <div style={{ padding: 10, fontWeight: "bolder" }}>
             {selectedText}
           </div>
-          {history.splice(2).map((msg, index) => {
+          {history.slice(2).map((msg, index) => {
             return (
               <div key={index} style={{ padding: 10 }}>
                 {index % 2 == 0 || msg.parts[0] == undefined ? "" : msg.parts[0].text}
