@@ -3,6 +3,8 @@ import { model } from '@/app/gemini'
 import { Button, TextField } from '@mui/material';
 import "../styles/imageHover.scss";
 import { styled } from '@mui/material/styles';
+import ReactMarkdown from 'react-markdown';
+
 
 const CustomTextField = styled(TextField)({
   backgroundColor: "white",
@@ -147,7 +149,9 @@ const ImageHover = ({ generatedText, coord }) => {
       }
       <div>
         <div onMouseUp={onSelectionChange} key={1} style={{ padding: 10 }}>
-          {history[1].parts[0] == undefined ? "" : history[1].parts[0].text}
+          {//history[1].parts[0] == undefined ? "" : history[1].parts[0].text
+          }
+          <ReactMarkdown children={history[1].parts[0].text}/>
         </div>
         {mainHistory.slice(2).map((msg, index) => {
           return (
