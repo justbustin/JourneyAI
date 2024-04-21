@@ -8,7 +8,7 @@ import { storage, firestore } from "../app/firebase";
 import { ref, uploadBytesResumable, updateMetadata, getMetadata } from "firebase/storage";
 import { Button, TextField } from "@mui/material";
 import { collection, doc, setDoc } from "firebase/firestore";
-import WebcamCapture from '../components/UploadLivePhoto';
+import WebcamCapture from '../components/WebcamCapture';
 import { useRouter } from "next/navigation";
 import EXIF from 'exif-js';
 import { NULL } from "sass";
@@ -90,9 +90,9 @@ const IndexPage = () => {
           console.log(error.message);
         },
         () => {
-          let customMetadata ={}
+          let customMetadata = {}
 
-          if(metaDataObject.GPSLatitude == null){
+          if (metaDataObject.GPSLatitude == null) {
             customMetadata = {
               time: metaDataObject.DateTimeOriginal ? metaDataObject.DateTimeOriginal : "2024:04:05 23:24:40",
               latitude: "34,4,20.07,N",
@@ -107,7 +107,7 @@ const IndexPage = () => {
             };
           }
 
-          updateMetadata(storageRef, {customMetadata})
+          updateMetadata(storageRef, { customMetadata })
             .then((metadata) => {
               console.log("Metadata updated successfully");
               console.log(metadata);
@@ -228,6 +228,7 @@ const IndexPage = () => {
       });
 
       router.push(`/info?album=${albumName}&length=${selectedFiles.length}`);
+      setTimeout(() => router.push(`/info?album=${albumName}`), 2000);
     }
   };
 
@@ -247,8 +248,10 @@ const IndexPage = () => {
           onChange={handleAlbumNameChange}
         />
       </div>
-      <WebcamCapture livePhotoChange={livePhotoChange}/>
-      <UploadFileBox onChange={handleFileChange} />
+      <div>
+        <WebcamCapture livePhotoChange={livePhotoChange} />
+        <UploadFileBox onChange={handleFileChange} />
+      </div>
       {selectedFiles.length > 0 && (
         <div>
           <h2>Selected Files:</h2>
