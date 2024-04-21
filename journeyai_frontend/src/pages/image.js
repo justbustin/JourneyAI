@@ -99,7 +99,7 @@ const IndexPage = () => {
               longitude: "118,21,30.37,W",
             };
           }
-          else{
+          else {
             const customMetadata = {
               time: metaDataObject.DateTimeOriginal ? metaDataObject.DateTimeOriginal : "2024:04:05 23:24:40",
               latitude: "34,4,20.07,N",
@@ -116,11 +116,11 @@ const IndexPage = () => {
               console.error("Error updating metadata:", error);
             });
 
-            const collectionRef = collection(firestore, `${albumName}`);
-            const customDocId = `length`;
-            const dataToStore = {
-              length: 1
-            };
+          const collectionRef = collection(firestore, `${albumName}`);
+          const customDocId = `length`;
+          const dataToStore = {
+            length: 1
+          };
 
           const docRef = doc(collectionRef, customDocId);
           setDoc(docRef, dataToStore)
@@ -136,7 +136,7 @@ const IndexPage = () => {
 
               const queryString = "hello XD"
               const res = await fetch(`/api/python2?album=${albumName}`);
-              
+
               const data = await res.json();
               console.log(data.message); // Output: "Python script executed successfully"
             } catch (error) {
@@ -149,7 +149,7 @@ const IndexPage = () => {
         }
       );
 
-      router.push(`/info?album=${albumName}&length=1`);
+      setTimeout(() => router.push(`/info?album=${albumName}&length=1`), 2000);
 
       // Your existing upload logic with the captured imageFile
     }
@@ -178,7 +178,7 @@ const IndexPage = () => {
             },
             () => {
               const customMetadata = {
-                time: metaDataObject.DateTimeOriginal,
+                time: "2024:04:05 23:24:40",
                 latitude: metaDataObject.GPSLatitude ? `${metaDataObject.GPSLatitude.toString()},${metaDataObject.GPSLatitudeRef.toString()}` : "34,4,20.07,N",
                 longitude: metaDataObject.GPSLongitude ? `${metaDataObject.GPSLongitude.toString()},${metaDataObject.GPSLongitudeRef.toString()}` : "118,21,30.37,W",
               };
@@ -212,7 +212,7 @@ const IndexPage = () => {
 
                   const queryString = "hello XD"
                   const res = await fetch(`/api/python2?album=${albumName}`);
-                  
+
                   const data = await res.json();
                   console.log(data.message); // Output: "Python script executed successfully"
                 } catch (error) {
@@ -227,8 +227,7 @@ const IndexPage = () => {
         });
       });
 
-      router.push(`/info?album=${albumName}&length=${selectedFiles.length}`);
-      setTimeout(() => router.push(`/info?album=${albumName}`), 2000);
+      setTimeout(() => router.push(`/info?album=${albumName}&length=${selectedFiles.length}`), 2000);
     }
   };
 
