@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import "../styles/typing.scss"
-
 
 const TypingAnimation = ({ texts, typingSpeed }) => {
   const [displayText, setDisplayText] = useState('');
@@ -37,7 +35,7 @@ const TypingAnimation = ({ texts, typingSpeed }) => {
     return () => clearTimeout(timeout);
   }, [displayText, charIndex, isDeleting, currentTextIndex, texts, typingSpeed]);
 
-  return <span><p>{displayText}</p></span>;
+  return <span>{displayText}</span>;
 };
 
 export default TypingAnimation;
