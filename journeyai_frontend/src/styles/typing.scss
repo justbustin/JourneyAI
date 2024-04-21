@@ -1,0 +1,23 @@
+@import "globals.scss";
+span {
+    text-align: center;
+    width: 100%;
+}
+
+p {
+    // background-image: linear-gradient(135deg, #537647, #C8DE8C); /* Replace with your desired gradient colors */
+    // -webkit-background-clip: text;
+    // background-clip: text;
+    // color: transparent;
+    color: white;
+}
+
+.linkText:hover {
+    text-decoration: underline;
+}
+
+.typingContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
