@@ -3,19 +3,60 @@ import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css'; // Import routing machine CSS
 import "../../styles/map.scss"
-import { useSearchParams } from "next/navigation";
+import ImageHover from '../ImageHover';import { useSearchParams } from "next/navigation";
 
 import { storage, firestore } from "../../app/firebase";
+import { ref, listAll, getDownloadURL, getMetadata } from 'firebase/storage';
 import { collection, onSnapshot } from "firebase/firestore";
 
 
 // Dynamically import the ReactLeafletRouting component with ssr set to false
+function ConvertDMSToDD(degrees, minutes, seconds, direction) {
+  const dd = Number(degrees) + Number(minutes) / 60 + Number(seconds) / 3600;
 
-const Map = ({ points, album }) => {
+  if (direction == "S" || direction == "W") {
+    return -dd;
+  }
+
+  return dd;
+}
+
+function ParseDMS(input) {
+  const parts = input.split(",");
+  const latOrLong = ConvertDMSToDD(parts[0], parts[1], parts[2], parts[3]);
+  return latOrLong;
+}
+
+const Map = ({ album }) => {
+  const [hovering, setHovering] = useState(false);
+  const [imageURLs, setImageURLs] = useState([]);
+  const [coords, setCoords] = useState([])
   const [loading, setLoading] = useState(true)
-  const [generatedText, setGeneratedText] = useState([])
+  const [generatedText, setGeneratedText] = useState("test")
 
   const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const getList = async () => {
+      const listRef = ref(storage, album);
+      const list = await listAll(listRef);
+      const temp_urls = [];
+      const temp_coords = [];
+      for (let i = 0; i < list.items.length; i++) {
+        const item = list.items[i];
+        const url = await getDownloadURL(item);
+        const metadata = await getMetadata(item);
+        temp_urls.push(url);
+        const coord = [ParseDMS(metadata.customMetadata.latitude), ParseDMS(metadata.customMetadata.longitude)];
+        temp_coords.push(coord);
+      }
+      setImageURLs(temp_urls);
+      setCoords(temp_coords);
+
+
+    };
+    getList();
+  }, [])
 
   const collectionRef = collection(firestore, album);
   console.log("albumname test", album)
@@ -35,7 +76,7 @@ const Map = ({ points, album }) => {
         switch (change.type) {
           case "added":
             console.log("Document added:", docData);
-            setGeneratedText(prevGeneratedText => [...prevGeneratedText, docData.text]);
+            setGeneratedText(docData.text);
             break;
           case "modified":
             console.log("Document modified:", docData);
@@ -49,6 +90,7 @@ const Map = ({ points, album }) => {
       // Example: Update loading state based on a condition
       if (snapshot.size - 1 === parseInt(searchParams.get("length"))) {
         setLoading(false);
+        console.log("GENTEXT AT MAP", generatedText)
         console.log("alr perfect")
       }
     });
@@ -61,49 +103,37 @@ const Map = ({ points, album }) => {
   }, [album, searchParams]);  // Dependency array includes `album` and `searchParams` to reset listener when they change
 
 
-
-  const startPoint = [51.505, -0.09];
-  const endPoint = [51.51, -0.1];
-
-  const [text, setText] = ("");
-
-  useEffect(() => {
-
-  }, [text]);
-
-
-  const customIcon = L.icon({
-    iconUrl: '/marker.png', // URL or path to the icon image
-    iconSize: [26.72, 40], // Size of the icon
-    iconAnchor: [20, 40], // Anchor point of the icon, relative to its top left corner
-    popupAnchor: [0, -40] // Popup anchor point, relative to the icon's anchor
-  });
+  const customIcon = (url) => {
+    console.log(coords);
+    console.log(url);
+    return L.icon({
+      iconUrl: url, // URL or path to the icon image
+      iconSize: [100, 160], // Size of the icon
+      iconAnchor: [20, 40], // Anchor point of the icon, relative to its top left corner
+      popupAnchor: [0, -40] // Popup anchor point, relative to the icon's anchor
+    });
+  }
 
 
   const handleMarkerClick = () => {
     console.log('Marker clicked!');
-    // Add your custom logic here
+    setHovering(!hovering);
   };
 
   return (
     <div className='mapContainer'>
-      <div>
-        {text}
-      </div>
-      <MapContainer center={[points[0][0], points[0][1]]} zoom={13} style={{ height: '90%' }} closePopupOnClick>
-        <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png" />
-        {points.map((point, index) => (
-          <Marker eventHandlers={{ click: handleMarkerClick }} key={index} position={[point[0], point[1]]} icon={customIcon} />
-        ))}
-        <Polyline positions={points.map(point => [point[0], point[1]])} color="green" />
-      </MapContainer>
-      {!loading && 
-        <div>
-          {generatedText.map((itm, key) => {
-            {console.log(itm)}
-            <div>{itm}</div>
-          })}
-          </div>
+      {
+        hovering && <ImageHover generatedText={generatedText}/>
+      }
+      {
+        coords.length > 0 &&
+        <MapContainer center={[coords[0][0], coords[0][1]]} zoom={13} style={{ height: '100%' }} closePopupOnClick>
+          <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png" />
+          {coords.map((coord, index) => (
+            <Marker eventHandlers={{ click: handleMarkerClick }} key={index} position={coord} icon={customIcon(imageURLs[index])} />
+          ))}
+          <Polyline positions={coords.map(coord => [coord[0], coord[1]])} color="green" />
+        </MapContainer>
       }
     </div>
   );
