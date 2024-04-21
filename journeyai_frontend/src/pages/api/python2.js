@@ -25,6 +25,7 @@ export default async function handler(req, res) {
     console.log("arg1", arg1.album)
     const options = {
       args: [arg1.album], // Pass arguments to the Python script
+      pythonPath: "/Users/justinnguyen/miniconda3/bin/python3"
     };
 
 

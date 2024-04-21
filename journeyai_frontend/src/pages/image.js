@@ -150,24 +150,25 @@ const IndexPage = () => {
               console.error('Error writing document: ', error);
             });
           console.log("about to run pythno")
-          const runPythonScript = async () => {
-            try {
-
-              const queryString = "hello XD"
-              const res = await fetch(`/api/python2?album=${albumName}`);
-
-              const data = await res.json();
-              console.log(data.message); // Output: "Python script executed successfully"
-            } catch (error) {
-              console.error('Error:', error);
-            }
-          };
-
-          runPythonScript();
+          
 
         }
       );
 
+      const runPythonScript = async () => {
+        try {
+
+          const queryString = "hello XD"
+          const res = await fetch(`/api/python2?album=${albumName}`);
+
+          const data = await res.json();
+          console.log(data.message); // Output: "Python script executed successfully"
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
+
+      runPythonScript();
       setTimeout(() => router.push(`/info?album=${albumName}&length=1`), 2000);
 
       // Your existing upload logic with the captured imageFile
@@ -226,29 +227,29 @@ const IndexPage = () => {
                   console.error('Error writing document: ', error);
                 });
               console.log("about to run pythno")
-              const runPythonScript = async () => {
-                try {
-
-                  const queryString = "hello XD"
-                  const res = await fetch(`/api/python2?album=${albumName}`);
-
-                  const data = await res.json();
-                  console.log(data.message); // Output: "Python script executed successfully"
-                } catch (error) {
-                  console.error('Error:', error);
-                }
-              };
-
-              runPythonScript();
+              
 
             }
           );
         });
       });
+      const runPythonScript = async () => {
+        try {
 
+          const queryString = "hello XD"
+          const res = await fetch(`/api/python2?album=${albumName}`);
+
+          const data = await res.json();
+          console.log(data.message); // Output: "Python script executed successfully"
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
+
+      runPythonScript();
       setTimeout(() => router.push(`/info?album=${albumName}&length=${selectedFiles.length}`), 2000);
     }
-  };
+  }; 
 
   return (
     <div id="imagePageContainer">
