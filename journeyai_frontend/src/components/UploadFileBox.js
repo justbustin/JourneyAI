@@ -43,11 +43,10 @@ const UploadFileBox = ({ onChange }) => {
       </label>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
         {thumbnails.reverse().slice(0,3).map((thumbnail, index) => (
-          <div key={index} style={{ width: '75px', height: '75px', overflow: 'hidden', marginTop: '10px' }}>
+          <div key={index} style={{ width: '100px', height: '100px', overflow: 'hidden', marginTop: '10px' }}>
             <img src={thumbnail} alt={`Thumbnail ${index}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             
           </div>
-
         ))}
         <span>
         {thumbnails.length > 3 && (
