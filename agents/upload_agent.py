@@ -46,10 +46,16 @@ def upload_data(response):
         'text': response.text,
         'time': datetime.now()
     }
+    print(response.name)
+    parts = response.name.split('/')
+    print(parts)
+    # Assign the split parts to two separate variables
+    directory_name = parts[0]
+    file_name = parts[1]
 
     # Reference to a specific collection and document
-    collection_name = '123'
-    document_id = 'IMG_9977_2.jpg'  # Specify your own document ID or use None to auto-generate
+    collection_name = directory_name
+    document_id = file_name  # Specify your own document ID or use None to auto-generate
 
     # Write data to Firestore
     doc_ref = db.collection(collection_name).document(document_id)

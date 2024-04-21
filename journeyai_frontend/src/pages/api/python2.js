@@ -1,18 +1,40 @@
 // api/python2.js
 import { PythonShell } from 'python-shell';
 import path from 'path';
+const { spawn } = require('child_process');
+
+
+function trimPathToDirectory(fullPath, directoryName) {
+  // Start with the full path and gradually go up until you find the directory or run out of path
+  let currentPath = fullPath;
+  while (currentPath !== path.dirname(currentPath)) { // Check if we have reached the root
+      if (path.basename(path.dirname(currentPath)) === directoryName) {
+          return path.dirname(currentPath); // Return the directory up to the specified folder
+      }
+      currentPath = path.dirname(currentPath);
+  }
+  return currentPath; // In case the directory wasn't found, return the last valid path
+}
 
 export default async function handler(req, res) {
     try {
       // Path to your Python script
       //const pythonScript = '../../../agents/hello_world.py';
 
-      const {arg1} = req.query;
+      const arg1 = req.query;
+      console.log("arg1", arg1.album)
       const options = {
-        args: [arg1] // Pass arguments to the Python script
+        args: [arg1.album], // Pass arguments to the Python script
+        pythonPath: "/Users/justinnguyen/miniconda3/bin/python3"
     };
 
-      const pythonScript = "/home/innoutman/LaHacks2.0/JourneyAI/agents/on_query.py";
+
+
+      let pythonScript = trimPathToDirectory(__dirname, "JourneyAI")
+      pythonScript = path.join(pythonScript, "agents", "on_query.py")
+      console.log(pythonScript)
+
+      
 
       // Execute Python script using python-shell
       const pythonShell = new PythonShell(pythonScript, options);

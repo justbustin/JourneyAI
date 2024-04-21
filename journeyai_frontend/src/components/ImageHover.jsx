@@ -4,7 +4,7 @@ import { Button, TextField } from '@mui/material';
 import "../styles/imageHover.scss";
 
 
-const ImageHover = () => {
+const ImageHover = ({generatedText}) => {
   const [chat, setChat] = useState(null);
   const [message, setMessage] = useState("");
   const [history, setHistory] = useState([]);
@@ -13,6 +13,7 @@ const ImageHover = () => {
   const [askQuestion, setAskQuestion] = useState(false);
 
   useEffect(() => {
+    console.log("gentext", generatedText)
     const chat = model.startChat({
       history: [
         {
@@ -21,7 +22,7 @@ const ImageHover = () => {
         },
         {
           role: "model",
-          parts: [{ text: "You were in Tokyo, Japan." }],
+          parts: [{ text: generatedText }],
         },
       ],
       generationConfig: {

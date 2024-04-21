@@ -3,7 +3,8 @@ import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css'; // Import routing machine CSS
 import "../../styles/map.scss"
-import ImageHover from '../ImageHover';
+import ImageHover from '../ImageHover';import { useSearchParams } from "next/navigation";
+
 import { storage, firestore } from "../../app/firebase";
 import { ref, listAll, getDownloadURL, getMetadata } from 'firebase/storage';
 import { collection, onSnapshot } from "firebase/firestore";
@@ -30,6 +31,10 @@ const Map = ({ album }) => {
   const [hovering, setHovering] = useState(false);
   const [imageURLs, setImageURLs] = useState([]);
   const [coords, setCoords] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [generatedText, setGeneratedText] = useState("test")
+
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const getList = async () => {
@@ -54,28 +59,49 @@ const Map = ({ album }) => {
   }, [])
 
   const collectionRef = collection(firestore, album);
-  const watcher = onSnapshot(collectionRef, (snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-      const doc = change.doc;
-      const docData = doc.data();
+  console.log("albumname test", album)
+  console.log("RAHHHHH", collectionRef)
 
-      // Handle changes based on the change type
-      switch (change.type) {
-        case "added":
-          console.log("Document added:", docData);
-          // Perform actions for a new document
-          break;
-        case "modified":
-          console.log("Document modified:", docData);
-          // Perform actions for a modified document
-          break;
-        case "removed":
-          console.log("Document removed:", docData);
-          // Perform actions for a removed document
-          break;
+  useEffect(() => {
+    const collectionRef = collection(firestore, album);
+    console.log("Setting up listener for album:", album);
+
+    const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+      console.log("Current number of documents:", snapshot.size);
+
+      snapshot.docChanges().forEach((change) => {
+        const doc = change.doc;
+        const docData = doc.data();
+        
+        switch (change.type) {
+          case "added":
+            console.log("Document added:", docData);
+            setGeneratedText(docData.text);
+            break;
+          case "modified":
+            console.log("Document modified:", docData);
+            break;
+          case "removed":
+            console.log("Document removed:", docData);
+            break;
+        }
+      });
+
+      // Example: Update loading state based on a condition
+      if (snapshot.size - 1 === parseInt(searchParams.get("length"))) {
+        setLoading(false);
+        console.log("GENTEXT AT MAP", generatedText)
+        console.log("alr perfect")
       }
     });
-  });
+
+    // Cleanup function to unsubscribe from the listener when component unmounts or album changes
+    return () => {
+      console.log("Cleaning up listener for album:", album);
+      unsubscribe();
+    };
+  }, [album, searchParams]);  // Dependency array includes `album` and `searchParams` to reset listener when they change
+
 
   const customIcon = (url) => {
     console.log(coords);
@@ -91,13 +117,13 @@ const Map = ({ album }) => {
 
   const handleMarkerClick = () => {
     console.log('Marker clicked!');
-    setHovering(true);
+    setHovering(!hovering);
   };
 
   return (
     <div className='mapContainer'>
       {
-        hovering && <ImageHover />
+        hovering && <ImageHover generatedText={generatedText}/>
       }
       {
         coords.length > 0 &&

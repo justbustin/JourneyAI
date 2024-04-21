@@ -94,16 +94,16 @@ const IndexPage = () => {
 
           if (metaDataObject.GPSLatitude == null) {
             customMetadata = {
-              time: metaDataObject.DateTimeOriginal,
-              latitude: "34.0699",
-              longitude: "118.4438"
+              time: metaDataObject.DateTimeOriginal ? metaDataObject.DateTimeOriginal : "2024:04:05 23:24:40",
+              latitude: "34,4,20.07,N",
+              longitude: "118,21,30.37,W",
             };
           }
-          else {
-            customMetadata = {
-              time: metaDataObject.DateTimeOriginal,
-              latitude: metaDataObject.GPSLatitude.toString(),
-              longitude: metaDataObject.GPSLongitude.toString()
+          else{
+            const customMetadata = {
+              time: metaDataObject.DateTimeOriginal ? metaDataObject.DateTimeOriginal : "2024:04:05 23:24:40",
+              latitude: "34,4,20.07,N",
+              longitude: "118,21,30.37,W",
             };
           }
 
@@ -116,11 +116,11 @@ const IndexPage = () => {
               console.error("Error updating metadata:", error);
             });
 
-          const collectionRef = collection(firestore, `${albumName}`);
-          const customDocId = `photo1YAAAYYY`;
-          const dataToStore = {
-            message: ''
-          };
+            const collectionRef = collection(firestore, `${albumName}`);
+            const customDocId = `length`;
+            const dataToStore = {
+              length: 1
+            };
 
           const docRef = doc(collectionRef, customDocId);
           setDoc(docRef, dataToStore)
@@ -135,8 +135,8 @@ const IndexPage = () => {
             try {
 
               const queryString = "hello XD"
-
-              const res = await fetch(`/api/python2?${albumName}`);
+              const res = await fetch(`/api/python2?album=${albumName}`);
+              
               const data = await res.json();
               console.log(data.message); // Output: "Python script executed successfully"
             } catch (error) {
@@ -149,7 +149,7 @@ const IndexPage = () => {
         }
       );
 
-
+      router.push(`/info?album=${albumName}&length=1`);
 
       // Your existing upload logic with the captured imageFile
     }
@@ -193,9 +193,9 @@ const IndexPage = () => {
                 });
 
               const collectionRef = collection(firestore, `${albumName}`);
-              const customDocId = `${image.name}`;
+              const customDocId = `length`;
               const dataToStore = {
-                message: ''
+                length: selectedFiles.length
               };
 
               const docRef = doc(collectionRef, customDocId);
@@ -211,8 +211,8 @@ const IndexPage = () => {
                 try {
 
                   const queryString = "hello XD"
-
-                  const res = await fetch(`/api/python2?${albumName}`);
+                  const res = await fetch(`/api/python2?album=${albumName}`);
+                  
                   const data = await res.json();
                   console.log(data.message); // Output: "Python script executed successfully"
                 } catch (error) {
@@ -227,6 +227,7 @@ const IndexPage = () => {
         });
       });
 
+      router.push(`/info?album=${albumName}&length=${selectedFiles.length}`);
       setTimeout(() => router.push(`/info?album=${albumName}`), 2000);
     }
   };
