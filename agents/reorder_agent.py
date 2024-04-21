@@ -39,12 +39,10 @@ def fetch_image(image_path):
 # Replace 'path/to/image.jpg' with the path of the image in your Firebase Storage
 
 # Replace 'path/to/image.jpg' with the path of the image in your Firebase Storage
-fetch_image('Justin/IMG-2688.jpg')
 
 def get_photos(id):
     bucket = storage.bucket()  # Access the storage bucket
-
-    blobs = bucket.list_blobs(prefix="test18")  # Make sure to include the trailing slash in prefix
+    blobs = bucket.list_blobs(prefix=id)  # Make sure to include the trailing slash in prefix
 
     # Print file names
     photos = []
@@ -72,26 +70,12 @@ def reorder_photos(blobs):
     # Sorting the list of dictionaries based on the 'time' key
     return sorted(blobs, key=lambda x: x['time'])
 
-
-
-img = PIL.Image.open('./testone.png')
-
-load_dotenv()
-GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
-
-genai.configure(api_key=GOOGLE_API_KEY)
-
-model = genai.GenerativeModel('gemini-1.5-pro-latest')
-
-#response = model.generate_content(["Describe the location and area associated in the background. Provide fun facts about the specific landmarks so that user can look into each thing more. Use this metadata to assist in the information: 35.65934° N, 139.70065° E Shibuya - dogenzaka", img], stream=True)
-#response.resolve()
-
-#print(response.text)
-
+AGENT_MAILBOX_KEY = "7d1ca833-2cdb-4c7b-8b26-ee069fd39061"
 # agent1qd9xvl8x9k92j4ueg575p83w4z7v6yywgj88kws2k2g75h6nz2ecvt9eytm
 reorder_agent = Agent(
     name="Reorder Agent",  
     seed="Reorder Agent Seed Phrase",
+    mailbox=f"{AGENT_MAILBOX_KEY}@https://agentverse.ai",
     port=8002,  
     endpoint="http://localhost:8002/submit",  
 )
@@ -117,12 +101,13 @@ GEMINI_AGENT = 'agent1qg592765d2lwmrya9rvdk2m0hw6g4qhaeywjupv3pxz2ycx5gzvw22fp2z
 @reorder_agent.on_message(model=QueryRequest)
 async def handle_request(ctx: Context, sender: str, request=QueryRequest):
     ctx.logger.info(f"Got request from")
-    photos = get_photos(29)
+    
+    photos = get_photos(request.message)
     reordered_photos = reorder_photos(photos)
     for photo in reordered_photos:
         print('test', photo)
-        
-        await ctx.send(GEMINI_AGENT, Photo(name=photo["name"], time=photo["time"], latty=photo["latty"], longy=photo["longy"]))
+        print('test2', photo["latitude"])
+        await ctx.send(GEMINI_AGENT, Photo(name=photo["name"], time=photo["time"], latty=photo["latitude"], longy=photo["longitude"]))
 
 
 if __name__ == "__main__":
