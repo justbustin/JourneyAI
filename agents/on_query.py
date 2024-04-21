@@ -1,16 +1,19 @@
 # Importing required libraries
 import json
 import asyncio
+import uagents
 from uagents import Model
 from uagents.query import query
+
 import sys
  
 # Define the agent's address to send queries to.
 # AGENT_ADDRESS = "agent1qgfytc9e7ketwqc06xndvjmznqgr3md8w43hzxdv2hasp25ya43j2mnd32e"
 AGENT_ADDRESS = "agent1qt39wlcel9jgs9av46rxsc70cp6rtpm8lzxu8qszl0f5f83s3a49s7yhfhw"
  
-PHOTO_FOLDER_NAME = sys.argv[1] if len(sys.argv) > 1 and sys.argv[1] else "test20"
-print(PHOTO_FOLDER_NAME)
+PHOTO_FOLDER_NAME = sys.argv[1]
+print(sys.argv[1])
+print("pgoto", PHOTO_FOLDER_NAME)
 
 # Define a model for the query request.
 class QueryRequest(Model):
@@ -33,6 +36,12 @@ async def make_agent_call(req: QueryRequest):
 # Main block to execute the script.
 if __name__ == "__main__":
     # Create a QueryRequest instance with your query and run make_agent_call with request.
-    request = QueryRequest(message=PHOTO_FOLDER_NAME)
-    print(asyncio.run(make_agent_call(request)))
+    if len(sys.argv) > 1:
+        msg = sys.argv[1]
+        print('test', msg)
+        request = QueryRequest(message=str(msg))
+        print(asyncio.run(make_agent_call(request)))
+    else:
+        print("Please provide a message as a command-line argument.")
+    
  

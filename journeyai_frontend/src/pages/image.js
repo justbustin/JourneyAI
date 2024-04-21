@@ -74,13 +74,28 @@ const IndexPage = () => {
                 .catch((error) => {
                   console.error('Error writing document: ', error);
                 });
+              console.log("about to run pythno")
+              const runPythonScript = async () => {
+                try {
+
+                  const queryString = "hello XD"
+                  const res = await fetch(`/api/python2?album=${albumName}`);
+                  
+                  const data = await res.json();
+                  console.log(data.message); // Output: "Python script executed successfully"
+                } catch (error) {
+                  console.error('Error:', error);
+                }
+              };
+
+              runPythonScript();
 
             }
           );
         });
       });
 
-      router.push("/info");
+      router.push(`/info?album=${albumName}&length=${selectedFiles.length}`);
     }
   };
 
