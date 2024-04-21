@@ -151,7 +151,7 @@ const ImageHover = ({ generatedText, coord }) => {
         </div>
         {mainHistory.slice(2).map((msg, index) => {
           return (
-            <div key={index} style={{ padding: 10 }}>
+            <div onMouseUp={onSelectionChange} key={index} style={{ padding: 10 }}>
               {index % 2 == 0 || msg.parts[0] == undefined ? "" : msg.parts[0].text}
             </div>
           );
