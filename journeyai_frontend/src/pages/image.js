@@ -7,7 +7,7 @@ import UploadFileBox from '../components/UploadFileBox';
 import { storage, firestore } from "../app/firebase";
 import { ref, uploadBytesResumable, updateMetadata, getMetadata } from "firebase/storage";
 import { Button, TextField } from "@mui/material";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc, getDocs } from "firebase/firestore";
 import WebcamCapture from '../components/WebcamCapture';
 import { useRouter } from "next/navigation";
 import EXIF from 'exif-js';
@@ -86,13 +86,29 @@ const IndexPage = () => {
   /**********************
    *********************
    *********************/
-  const handleUpload = () => {
+  const handleUpload = async () => {
 
     if (livePhoto) {
+
+      //see if the collection already exists
+      
+      
+      let photoId = 0;
+
+      try {
+        const collectionRef = collection(firestore, albumName);
+        const querySnapshot = await getDocs(collectionRef);
+        photoId = querySnapshot.size;
+        console.log("Album Name: ", albumName);
+        console.log("Photo ID: ", photoId);
+      }catch (error) {
+        console.error("Error getting documents: ", error);
+      }
+
       console.log("uploading photo")
       const imageBlob = dataURLtoBlob(livePhoto);
 
-      const storageRef = ref(storage, `${albumName}/photo1YAAAYYY`);
+      const storageRef = ref(storage, `${albumName}/${photoId}`);
       const uploadTask = uploadBytesResumable(storageRef, imageBlob);
 
       const metaDataObject = EXIF.getAllTags(livePhoto);
@@ -136,7 +152,7 @@ const IndexPage = () => {
             });
 
           const collectionRef = collection(firestore, `${albumName}`);
-          const customDocId = `length`;
+          const customDocId = `length${photoId}`;
           const dataToStore = {
             length: 1
           };
