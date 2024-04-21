@@ -149,7 +149,7 @@ const IndexPage = () => {
         }
       );
 
-      router.push(`/info?album=${albumName}&length=1`);
+      setTimeout(() => router.push(`/info?album=${albumName}&length=${selectedFiles.length}`), 3000)
 
       // Your existing upload logic with the captured imageFile
     }
@@ -227,8 +227,8 @@ const IndexPage = () => {
         });
       });
 
-      router.push(`/info?album=${albumName}&length=${selectedFiles.length}`);
-      setTimeout(() => router.push(`/info?album=${albumName}`), 2000);
+      
+      setTimeout(() => router.push(`/info?album=${albumName}&length=${selectedFiles.length}`), 3000)
     }
   };
 
