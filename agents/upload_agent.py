@@ -1,5 +1,6 @@
 import pathlib
 import textwrap
+from datetime import datetime
 
 import google.generativeai as genai
 
@@ -23,21 +24,17 @@ firebase_admin.initialize_app(cred, {
     'storageBucket': 'lahacks-8dda9.appspot.com'  # Use your actual storage bucket name
 })
 
-# agent1qg592765d2lwmrya9rvdk2m0hw6g4qhaeywjupv3pxz2ycx5gzvw22fp2zr
+AGENT_MAILBOX_KEY = "9021d043-aa2f-40a5-afde-e3d0ce5bab4c"
+# agent1qwwd9dtt3hs2hyas6ax6vcptcz9vapkyqchlnp9j6fzpwn00edd3u5gvk5r
 upload_agent = Agent(
     name="upload agent",  
     seed="upload agent Seed Phrase",
+    mailbox=f"{AGENT_MAILBOX_KEY}@https://agentverse.ai",
     port=8004,  
     endpoint="http://localhost:8004/submit",  
 )
 print(upload_agent.address)
  
-img = PIL.Image.open('./testone.png')
-
-load_dotenv()
-GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
-
-genai.configure(api_key=GOOGLE_API_KEY)
 
 
 def upload_data(response):
@@ -46,7 +43,8 @@ def upload_data(response):
 
     # Data to write
     data = {
-        'text': response.text
+        'text': response.text,
+        'time': datetime.now()
     }
 
     # Reference to a specific collection and document

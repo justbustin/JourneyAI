@@ -1,29 +1,19 @@
+"use client"
+
 import Map from "@/components/Map";
-import ImageHover from "@/components/ImageHover";
 import "../styles/info.scss"
+import { useSearchParams } from "next/navigation";
 
 export default function Info() {
+  const searchParams = useSearchParams();
+  const album = searchParams.get("album");
+  console.log(album);
 
   return (
     <div id="infoPageContainer">
-        <div>
-        <ImageHover/>
-        </div>
-        <div class="mapContainer">
-        <Map points={[[51.505, -0.09],[51.51, 10.5],[51.51, -10.5]]}/>
-        </div>
+      <div className="mapContainer">
+        <Map album={album} />
+      </div>
     </div>
   );
 }
-
-// export async function getServerSideProps() {
-//   // Fetch points from backend
-//   // const response = await fetch('your-backend-endpoint');
-//   // const points = await response.json();
-
-//   return {
-//     props: {
-//       points,
-//     },
-//   };
-// }
