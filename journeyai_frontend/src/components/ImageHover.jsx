@@ -95,7 +95,7 @@ const ImageHover = ({ generatedText, coord }) => {
   }
 
   return (
-    <div style={{ width: '25%', height: "100%", overflow: "scroll", color: "#FFFFFF", scrollbarWidth: "thin" }}>
+    <div style={{ width: '25%', height: "200px", overflow: "scroll", color: "#FFFFFF", scrollbarWidth: "thin" }}>
       {selectedText &&
         <div className="selectedChat">
           <div style={{ padding: 10, fontWeight: "bolder" }}>
