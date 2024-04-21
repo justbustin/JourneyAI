@@ -8,6 +8,7 @@ import IntroMap from "@/components/IntroMap";
 
 export default function Home() {
     return (
+        <div>
       <div id="homePageContainer">
         <div id="logoContainer">
         <img id="logo" src="/logo.png" alt="JourneyAI"/>
@@ -16,11 +17,12 @@ export default function Home() {
         <TypingAnimation texts={['Embark on a trip through your memories', 'Create new journeys']} typingSpeed={100} />
         </div>
         <div className="btnContainer">
-        <Link className="link" href="/image"><Button className="enterButton">click to start</Button></Link>
+        <a className="link" href="/choices"><Button className="enterButton">click to start</Button></a>
         </div>
-        <div className="introMapContainer">
-        <IntroMap/>
-        </div>
+      </div>
+      <div className="introMapContainer">
+      <IntroMap/>
+      </div>
       </div>
     );
 }

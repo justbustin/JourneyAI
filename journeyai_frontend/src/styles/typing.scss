@@ -11,3 +11,13 @@ p {
     // color: transparent;
     color: white;
 }
+
+.linkText:hover {
+    text-decoration: underline;
+}
+
+.typingContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
