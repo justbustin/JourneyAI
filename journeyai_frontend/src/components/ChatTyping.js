@@ -18,7 +18,7 @@ const TypingChat = ({ word, onSelectionChange }) => {
 
   return (
     <div className='typingContainer'>
-      <p className='linkText' onMouseUp={onSelectionChange}>{text}</p>
+      <p className='' onMouseUp={onSelectionChange}>{text}</p>
     </div>
   );
 };
