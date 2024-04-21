@@ -25,7 +25,7 @@ const ImageHover = () => {
         },
       ],
       generationConfig: {
-        maxOutputTokens: 100,
+        maxOutputTokens: 3000,
       },
     });
 
@@ -47,6 +47,11 @@ const ImageHover = () => {
     return null;
   }
 
+
+  const handleAskQuestion =  () => {
+    setAskQuestion(!askQuestion) 
+  }
+
   return (
     <div>
       <div>
@@ -58,15 +63,19 @@ const ImageHover = () => {
           );
         })}
       </div>
-      <Button>Ask a Question</Button>
+      {!askQuestion && 
+      (
+      <div><Button onClick={() => handleSend("Can you tell me more about this place?")}>Learn More</Button>
+      <Button onClick={() => handleAskQuestion()}>Ask Your Own Question</Button></div>)}
+      {askQuestion &&
+      (<div>
       <TextField value={message} onChange={(e) => setMessage(e.target.value)} />
-
+        <Button onClick={() => handleAskQuestion()}> Back </Button>
       <Button onClick={() => handleSend(message)}>
         Send
       </Button>
-      <div className='hello'>
-        Hello
-      </div>
+      </div>)
+  }
     </div >
   )
 }

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css'; // Import routing machine CSS
-import Routing from './route';
 import "../../styles/map.scss"
 
 import { storage, firestore} from "../../app/firebase";
@@ -11,31 +10,7 @@ import { collection, onSnapshot } from "firebase/firestore";
 
 // Dynamically import the ReactLeafletRouting component with ssr set to false
 
-const Map = ({points}) => {
-
-  const collectionRef = collection(firestore, "123");
-  const watcher = onSnapshot(collectionRef, (snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-      const doc = change.doc;
-      const docData = doc.data();
-  
-      // Handle changes based on the change type
-      switch (change.type) {
-        case "added":
-          console.log("Document added:", docData);
-          // Perform actions for a new document
-          break;
-        case "modified":
-          console.log("Document modified:", docData);
-          // Perform actions for a modified document
-          break;
-        case "removed":
-          console.log("Document removed:", docData);
-          // Perform actions for a removed document
-          break;
-      }
-    });
-  });
+const IntroMap = () => {
   
 
   const startPoint = [51.505, -0.09];
@@ -66,16 +41,13 @@ const Map = ({points}) => {
       <div>
         {text}
       </div>
-      <MapContainer center={[points[0][0],points[0][1]]} zoom={13} style={{ height: '100%' }} closePopupOnClick>
+      <MapContainer center={[34.068920,-118.445183]} zoom={12} style={{ height: '100%' }} closePopupOnClick zoomControl={false}>
         <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"/>
-        {points.map((point, index) => (
-        <Marker eventHandlers={{ click: handleMarkerClick }} key={index} position={[point[0], point[1]]} icon={customIcon} />
-      ))}
-        {/* <Routing points={points} /> */}
-        <Polyline positions={points.map(point => [point[0], point[1]])} color="green" />
+        <Marker eventHandlers={{ click: handleMarkerClick }} position={[34.068920,-118.445183]} icon={customIcon} />
+        {/* <Polyline positions={points.map(point => [point[0], point[1]])} color="green" /> */}
       </MapContainer>
     </div>
   );
 };
 
-export default Map;
+export default IntroMap;
