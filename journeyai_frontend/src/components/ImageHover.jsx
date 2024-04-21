@@ -3,8 +3,7 @@ import { model } from '@/app/gemini'
 import { Button, TextField } from '@mui/material';
 import "../styles/imageHover.scss";
 import { styled } from '@mui/material/styles';
-import ReactMarkdown from 'react-markdown';
-
+import TypingChat from './ChatTyping';
 
 const CustomTextField = styled(TextField)({
   backgroundColor: "white",
@@ -123,7 +122,7 @@ const ImageHover = ({ generatedText, coord }) => {
           {history.slice(2).map((msg, index) => {
             return (
               <div key={index} style={{ padding: 10 }}>
-                {index % 2 == 0 || msg.parts[0] == undefined ? "" : msg.parts[0].text}
+                {index % 2 == 0 || msg.parts[0] == undefined ? "" : <TypingChat onSelectionChange={onSelectionChange} word={msg.parts[0].text}/>}
               </div>
             );
           })}
@@ -155,6 +154,8 @@ const ImageHover = ({ generatedText, coord }) => {
         </div>
         {mainHistory.slice(2).map((msg, index) => {
           return (
+            <div key={index} style={{ padding: 10 }}>
+              {index % 2 == 0 || msg.parts[0] == undefined ? "" : <TypingChat onSelectionChange={onSelectionChange} word={msg.parts[0].text}/>}
             <div onMouseUp={onSelectionChange} key={index} style={{ padding: 10 }}>
               {index % 2 == 0 || msg.parts[0] == undefined ? "" : msg.parts[0].text}
             </div>
