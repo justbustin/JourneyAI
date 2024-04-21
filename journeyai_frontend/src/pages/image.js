@@ -130,15 +130,15 @@ const IndexPage = () => {
           if (metaDataObject.GPSLatitude == null) {
             customMetadata = {
               time: metaDataObject.DateTimeOriginal ? metaDataObject.DateTimeOriginal : "2024:04:05 23:24:40",
-              latitude: "34,4,20.07,N",
-              longitude: "118,21,30.37,W",
+              latitude: "34,4,11.64,N",
+              longitude: "118,26,37.68,W",
             };
           }
           else {
             const customMetadata = {
               time: metaDataObject.DateTimeOriginal ? metaDataObject.DateTimeOriginal : "2024:04:05 23:24:40",
-              latitude: "34,4,20.07,N",
-              longitude: "118,21,30.37,W",
+              latitude: "34,4,11.64,N",
+              longitude: "118,26,37.68,W",
             };
           }
 
