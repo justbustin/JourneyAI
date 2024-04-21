@@ -3,9 +3,10 @@ import React from 'react';
 import TripSlider from '../components/tripSlider';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import PastMap from '@/components/pastTrips';
+import "../styles/selectTrips.scss";
 
 const trips = [
-  { id: 1, name: 'XDD' },
+  { id: 1, name: 'japantrip' },
   { id: 2, name: '232' },
   { id: 3, name: '69' },
   // Add more trips here
@@ -15,6 +16,13 @@ const selectTrip = () => {
   return (
 
     <div className="container">
+       <div className="logoSection">
+        <div id="logoContainer">
+            <a href="/choices">
+        <img id="logo" src="/logo.png" alt="JourneyAI"/>
+        </a>
+        </div>
+        </div>
       <TripSlider trips={trips} />
       <div className="mapContainer">
         {/* Render your map background image here */}
@@ -27,7 +35,6 @@ const selectTrip = () => {
           height: 100vh;
           width: 100vw;
           z-index: 10;
-          background-color: #333333;
         }
 
         .mapContainer {

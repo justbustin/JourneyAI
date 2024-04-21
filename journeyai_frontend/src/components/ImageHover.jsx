@@ -156,9 +156,7 @@ const ImageHover = ({ generatedText, coord }) => {
         {mainHistory.slice(2).map((msg, index) => {
           return (
             <div onMouseUp={onSelectionChange} key={index} style={{ padding: 10 }}>
-               {//index % 2 == 0 || msg.parts[0] == undefined ? "" : msg.parts[0].text
-               }
-              <ReactMarkdown children={msg.parts[0].text}/>
+              {index % 2 == 0 || msg.parts[0] == undefined ? "" : msg.parts[0].text}
             </div>
           );
         })}
