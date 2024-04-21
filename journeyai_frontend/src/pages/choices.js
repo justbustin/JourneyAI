@@ -13,7 +13,9 @@ export default function Choices() {
       <div id="choicesPageContainer">
         <div className="logoSection">
         <div id="logoContainer">
+            <a href="/choices">
         <img id="logo" src="/logo.png" alt="JourneyAI"/>
+        </a>
         </div>
         </div>
         <div className="typingContainer">
@@ -34,7 +36,7 @@ export default function Choices() {
         <Marker className="marker"/>
         </div>
         <div className="btnContainer">
-            <a className="link" href="/image"><TypingLinkAnimation word="Relive a journey" /></a>
+            <a className="link" href="/selectTrip"><TypingLinkAnimation word="Relive a journey" /></a>
         </div>
         </div>
         </div>
