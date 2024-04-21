@@ -9,7 +9,7 @@ import sys
 # AGENT_ADDRESS = "agent1qgfytc9e7ketwqc06xndvjmznqgr3md8w43hzxdv2hasp25ya43j2mnd32e"
 AGENT_ADDRESS = "agent1qt39wlcel9jgs9av46rxsc70cp6rtpm8lzxu8qszl0f5f83s3a49s7yhfhw"
  
-PHOTO_FOLDER_NAME = sys.argv[1] if len(sys.argv) > 1 and sys.argv[1] else "test18"
+PHOTO_FOLDER_NAME = sys.argv[1] if len(sys.argv) > 1 and sys.argv[1] else "test20"
 print(PHOTO_FOLDER_NAME)
 
 # Define a model for the query request.

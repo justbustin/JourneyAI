@@ -13,16 +13,18 @@ import { collection, onSnapshot } from "firebase/firestore";
 
 const Map = ({points}) => {
 
-  const collectionRef = collection(firestore, "123");
+  const collectionRef = collection(firestore, "test21");
   const watcher = onSnapshot(collectionRef, (snapshot) => {
     snapshot.docChanges().forEach((change) => {
       const doc = change.doc;
       const docData = doc.data();
+      console.log(docData)
   
       // Handle changes based on the change type
       switch (change.type) {
         case "added":
           console.log("Document added:", docData);
+          
           // Perform actions for a new document
           break;
         case "modified":
@@ -72,7 +74,6 @@ const Map = ({points}) => {
         <Marker eventHandlers={{ click: handleMarkerClick }} key={index} position={[point[0], point[1]]} icon={customIcon} />
       ))}
         {/* <Routing points={points} /> */}
-        <Polyline positions={points.map(point => [point[0], point[1]])} color="green" />
       </MapContainer>
     </div>
   );

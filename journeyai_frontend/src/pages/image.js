@@ -61,9 +61,9 @@ const IndexPage = () => {
                 });
 
               const collectionRef = collection(firestore, `${albumName}`);
-              const customDocId = `${image.name}`;
+              const customDocId = `length`;
               const dataToStore = {
-                message: ''
+                length: selectedFiles.length
               };
 
               const docRef = doc(collectionRef, customDocId);
