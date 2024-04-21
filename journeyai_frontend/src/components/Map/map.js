@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css'; // Import routing machine CSS
 import "../../styles/map.scss"
@@ -33,7 +33,7 @@ const Map = ({ album }) => {
   const [coords, setCoords] = useState([])
   const [loading, setLoading] = useState(true)
   const [generatedText, setGeneratedText] = useState([])
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(0);  
 
   const searchParams = useSearchParams();
 
@@ -109,18 +109,6 @@ const Map = ({ album }) => {
   }, [album, searchParams]);  // Dependency array includes `album` and `searchParams` to reset listener when they change
 
 
-  const customIcon = (url) => {
-    console.log(coords);
-    console.log(url);
-    return L.icon({
-      iconUrl: url, // URL or path to the icon image
-      iconSize: [100, 160], // Size of the icon
-      iconAnchor: [20, 40], // Anchor point of the icon, relative to its top left corner
-      popupAnchor: [0, -40] // Popup anchor point, relative to the icon's anchor
-    });
-  }
-
-
   const handleMarkerClick = (index) => {
     console.log('Marker clicked!');
     setHovering(!hovering);
@@ -130,20 +118,68 @@ const Map = ({ album }) => {
   return (
     <div className='mapContainer'>
       {
-        hovering && <ImageHover generatedText={generatedText[index]} coords={coords} />
+        hovering && <ImageHover generatedText={generatedText[index]} coord={coords[index]} />
       }
       {
         coords.length > 0 &&
         <MapContainer center={[coords[0][0], coords[0][1]]} zoom={13} style={{ height: '100%', flexGrow: 1 }} closePopupOnClick>
           <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png" />
           {coords.map((coord, index) => (
-            <Marker eventHandlers={{ click: () => handleMarkerClick(index) }} key={index} position={coord} icon={customIcon(imageURLs[index])} />
+            <ZoomableMarker
+              position={coord}
+              imageURL={imageURLs[index]}
+              index={index}
+              onClick={handleMarkerClick}
+              key={index}
+            />
           ))}
           <Polyline positions={coords.map(coord => [coord[0], coord[1]])} color="green" />
         </MapContainer>
       }
     </div>
   );
+  
 };
+
+const ZoomableMarker = ({ position, imageURL, index, onClick }) => {
+  const map = useMap();
+  const [hovering, setHovering] = useState(false)
+  const [iconSize, setIconSize] = useState([100, 160]);
+
+  const targetZoomLevel = 17;  // Set your desired zoom level here
+
+  const customIcon = (url) => {
+    return L.icon({
+      iconUrl: url, // URL or path to the icon image
+      iconSize: iconSize, // Size of the icon
+      iconAnchor: [iconSize[0] / 2, iconSize[1] / 2], // Anchor point of the icon, relative to its top left corner
+    });
+  }
+
+  const handleClick = () => {
+    onClick(index);  // Handle the hovering and other side effects
+    if (map.getZoom() !== targetZoomLevel) {
+      map.panTo(position)
+      map.setView(position, targetZoomLevel);  // Set the view with the target zoom level
+    } else {
+      map.panTo(position);  // Only recenter the map if already at target zoom level
+      map.setView(position, 12)
+    }
+
+    if (!hovering) {
+      setIconSize([20 * 15, 30 * 15])
+    }
+    else {
+      setIconSize([100, 160])
+    }
+
+    setHovering(!hovering)
+  };
+
+  return (
+    <Marker position={position} icon={customIcon(imageURL)} eventHandlers={{ click: handleClick }} />
+  );
+};
+
 
 export default Map;
