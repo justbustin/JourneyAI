@@ -149,8 +149,13 @@ const ZoomableMarker = ({ position, imageURL, index, onClick }) => {
   const targetZoomLevel = 17;  // Set your desired zoom level here
 
   const customIcon = (url) => {
-    return L.icon({
-      iconUrl: url, // URL or path to the icon image
+    return L.divIcon({
+      html: `<div style="text-align: center; position: relative;">
+             <div style="color: white; font-size: 35px; font-weight: bold; padding: 2px 4px; border-radius: 4px; position: absolute; left: 50%; transform: translateX(-50%); top: -40px;">
+                 <!-- Text above the marker -->
+             </div>
+             <img src="${url}" style="width: ${iconSize[0] - 5}px; height: ${iconSize[1] - 5}px;">  <!-- Marker icon -->
+           </div>`,
       iconSize: iconSize, // Size of the icon
       iconAnchor: [iconSize[0] / 2, iconSize[1] / 2], // Anchor point of the icon, relative to its top left corner
     });
