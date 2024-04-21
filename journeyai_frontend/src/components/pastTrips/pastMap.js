@@ -4,13 +4,10 @@ import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css'; // Import routing machine CSS
 import "../../styles/introMap.scss"
 
-import { storage, firestore} from "../../app/firebase";
-import { collection, onSnapshot } from "firebase/firestore";
-
 
 // Dynamically import the ReactLeafletRouting component with ssr set to false
 
-const IntroMap = () => {
+const PastMap = () => {
 
 
   const customIcon1 = L.icon({
@@ -56,4 +53,4 @@ const IntroMap = () => {
   );
 };
 
-export default IntroMap;
+export default PastMap;
