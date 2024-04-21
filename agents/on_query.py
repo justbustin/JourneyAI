@@ -3,6 +3,7 @@ import json
 import asyncio
 from uagents import Model
 from uagents.query import query
+
 import sys
  
 # Define the agent's address to send queries to.
@@ -33,6 +34,13 @@ async def make_agent_call(req: QueryRequest):
 # Main block to execute the script.
 if __name__ == "__main__":
     # Create a QueryRequest instance with your query and run make_agent_call with request.
-    request = QueryRequest(message=PHOTO_FOLDER_NAME)
-    print(asyncio.run(make_agent_call(request)))
+    if len(sys.argv) > 1:
+        message = sys.argv[1]
+        request = QueryRequest(message="20")
+        print(asyncio.run(make_agent_call(request)))
+    else:
+        print("Please provide a message as a command-line argument.")
+    
+    #request = QueryRequest(message=PHOTO_FOLDER_NAME)
+    #print(asyncio.run(make_agent_call(request)))
  
