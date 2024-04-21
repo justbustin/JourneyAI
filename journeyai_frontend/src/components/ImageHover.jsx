@@ -148,12 +148,16 @@ const ImageHover = ({ generatedText, coord }) => {
       }
       <div>
         <div onMouseUp={onSelectionChange} key={1} style={{ padding: 10 }}>
-          {history[1].parts[0] == undefined ? "" : history[1].parts[0].text}
+          {//history[1].parts[0] == undefined ? "" : history[1].parts[0].text
+          }
+          <ReactMarkdown children={history[1].parts[0].text}/>
         </div>
         {mainHistory.slice(2).map((msg, index) => {
           return (
             <div key={index} style={{ padding: 10 }}>
               {index % 2 == 0 || msg.parts[0] == undefined ? "" : <TypingChat onSelectionChange={onSelectionChange} word={msg.parts[0].text}/>}
+            <div onMouseUp={onSelectionChange} key={index} style={{ padding: 10 }}>
+              {index % 2 == 0 || msg.parts[0] == undefined ? "" : msg.parts[0].text}
             </div>
           );
         })}
