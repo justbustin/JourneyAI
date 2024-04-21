@@ -22,9 +22,9 @@ const WebcamCapture = ({livePhotoChange}) => {
   };
 
   return (
-    <div>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', minHeight: '0px' }}>
       {!capturedImage && !isCapturing && (
-        <button onClick={startCapture}>Capture</button>
+        <button className="captureButton" style={styles.captureButton} onClick={startCapture}>Capture A Live Photo</button>
       )}
       {isCapturing && (
         <div>
@@ -33,17 +33,35 @@ const WebcamCapture = ({livePhotoChange}) => {
             ref={webcamRef}
             screenshotFormat="image/jpeg"
           />
-          <button onClick = {capture}>Capture</button>
+          <button className="captureButton" style={styles.captureButton} onClick = {capture}>Capture</button>
         </div>
       )}
       {capturedImage && !isCapturing && (
         <>
           <img src={capturedImage} alt="Captured" />
-          <button onClick={retake}>Retake</button>
+          <button className="captureButton" style={styles.captureButton} onClick={retake}>Retake</button>
         </>
       )}
     </div>
   );
+};
+
+const styles = {
+  captureButton: {
+    display: 'inline-block',
+    padding: '10px 20px',
+    border: 'none',
+    borderRadius: '4px',
+    color: '#fff', /* White text color */
+    backgroundColor: '#428bca', /* Blue background color */
+    font: 'inherit',
+    textAlign: 'center',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease-in-out',
+  },
+  captureButtonHover: {
+    backgroundColor: '#357ebd', /* Darker blue on hover */
+  },
 };
 
 export default WebcamCapture;

@@ -1,0 +1,137 @@
+@import 'globals.scss';
+@import 'variables';
+
+#choicesPageContainer {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: start;
+    background-size: cover;
+    background-position: center;
+}
+
+// .link:hover::after {
+//     content: " →";
+// }
+
+.link {
+    margin-bottom: 4em;
+}
+
+
+.link {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-content: center;
+}
+
+.btnContainer {
+    width: 100%;
+    border-radius: 32px;
+    margin-top: 4em;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+}
+
+.typingContainer {
+    font-size: 1.5em;
+    height: 20px;
+    width: 100%;
+}
+
+@keyframes dropIn {
+    0% {
+        transform: translateY(-100px); /* Start with opacity 0 */
+        opacity: 0;
+    }
+    60% {
+        transform: translateY(-8px); /* Gradually increase opacity to 1 */
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(-20px); /* Gradually increase opacity to 1 */
+        opacity: 1;
+    }
+}
+  
+.markerDiv {
+    animation: dropIn 1.5s ease forwards; /* Adjust duration and timing function as needed */
+}
+
+.globe {
+    position: fixed;
+    bottom: 0;
+    right: 0; /* Adjust horizontal distance from the right */
+    z-index: -1;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+}
+
+.globe svg {
+    width: 70%;
+    height: 70%;
+}
+
+.markerSection {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.markerDiv {
+    opacity: 0;
+}
+
+.markerContainer {
+    margin: 20px 0 20px 0;
+}
+
+.navButton:hover::after {
+    text-transform: underline;
+}
+
+
+.logoSection {
+    width: 100%;
+}
+
+#logo {
+    padding: 40px 20px 20px 20px;
+    width: 50%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+}
+    
+
+#logo {
+    opacity: 1; /* Start with opacity 0 to make the text invisible */
+}
+
+.markerContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-content: center;
+}
+
+.navButton {
+    width: 100%;
+    color: white;
+    font-size: 1.5vw;
+    height: 100%;
+    text-transform: none;
+}
+
+.btnContainer {
+    margin-left: 40px;
+}
+
+p:hover {
+    text-decoration: underline;
+}
