@@ -8,7 +8,6 @@ import IntroMap from "@/components/IntroMap";
 
 export default function Home() {
     return (
-        <div>
       <div id="homePageContainer">
         <div id="logoContainer">
         <img id="logo" src="/logo.png" alt="JourneyAI"/>
@@ -19,12 +18,10 @@ export default function Home() {
         <div className="btnContainer">
         <Link className="link" href="/image"><Button className="enterButton">click to start</Button></Link>
         </div>
-       
-      </div>
         <div className="introMapContainer">
         <IntroMap/>
         </div>
-        </div>
+      </div>
     );
 }
   

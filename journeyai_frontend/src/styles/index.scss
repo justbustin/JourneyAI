@@ -4,13 +4,17 @@
 #homePageContainer {
     display: flex;
     width: 100%;
-    height: 50vh;
+    height: 100vh;
     // background-image: url("/journeyAIBackground.png");
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background-size: cover;
     background-position: center;
+    z-index: 100;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 #logo {
@@ -20,7 +24,6 @@
     object-fit: contain;
     pointer-events: none;
 }
-
 // .link:hover::after {
 //     content: " →";
 // }
@@ -41,17 +44,17 @@ to {
 
 .enterButton {
     width: 100%;
-    background-color: #D9EEEF;
-    color: black;
+    background-color: #537647;
+    color: white;
     border-radius: 32px;
-    border: solid 1.5px black;
     font-size: 2.5vw;
-    padding: 10px 25px 10px 25px;
     height: 100%;
+    text-transform: lowercase;
+    
 }
 
 .enterButton:hover {
-    background-color: #D9EEEF;
+    background-color: #537647;
 }
 
 .link {
@@ -62,6 +65,7 @@ to {
 }
 
 .btnContainer {
+    width: 50%;
     border-radius: 32px;
     margin-top: 4em;
 }
@@ -76,5 +80,7 @@ to {
 
 .typingContainer {
     font-size: 2em;
-    height: 2em;
+    height: 20px;
+    width: 100%;
 }
+
