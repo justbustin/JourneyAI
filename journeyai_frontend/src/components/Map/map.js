@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Polyline, useMap, ZoomControl } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css'; // Import routing machine CSS
 import "../../styles/map.scss"
@@ -139,6 +139,7 @@ const Map = ({ album }) => {
             />
           ))}
           <Polyline positions={coords.map(coord => [coord[0], coord[1]])} color="green" />
+          <ZoomControl position="topright" />
         </MapContainer>
       }
     </div>
