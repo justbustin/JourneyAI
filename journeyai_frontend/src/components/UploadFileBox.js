@@ -1,5 +1,5 @@
 // components/UploadFileBox.js
-
+import "../styles/fileBox.scss"
 import React, { useState } from 'react';
 
 const UploadFileBox = ({ onChange }) => {
@@ -27,7 +27,7 @@ const UploadFileBox = ({ onChange }) => {
 
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', minHeight: '400px' }}>
+    <div className="fileBox">
       <input
         type="file"
         multiple
@@ -36,17 +36,27 @@ const UploadFileBox = ({ onChange }) => {
         id="fileInput" // associate label with file input
       />
       <label htmlFor="fileInput" style={{ cursor: 'pointer' }}>
-        <div style={{ border: '2px dashed #aaa', padding: '20px', marginBottom: '20px' }}>
+        <div className="fileInputContainer">
           <p>Drag & drop files here or</p>
           <p>click to select files</p>
         </div>
       </label>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-        {thumbnails.map((thumbnail, index) => (
-          <div key={index} style={{ width: '100px', height: '100px', overflow: 'hidden' }}>
+        {thumbnails.reverse().slice(0,3).map((thumbnail, index) => (
+          <div key={index} style={{ width: '75px', height: '75px', overflow: 'hidden', marginTop: '10px' }}>
             <img src={thumbnail} alt={`Thumbnail ${index}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            
           </div>
+
         ))}
+        <span>
+        {thumbnails.length > 3 && (
+    <p>
+      + {thumbnails.length - 3} more
+    </p>
+    
+  )}
+  </span>
       </div>
     </div>
   );

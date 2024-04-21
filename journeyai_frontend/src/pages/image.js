@@ -11,13 +11,32 @@ import { collection, doc, setDoc } from "firebase/firestore";
 import WebcamCapture from '../components/WebcamCapture';
 import { useRouter } from "next/navigation";
 import EXIF from 'exif-js';
-import { NULL } from "sass";
+import UploadGlobe from "assets/svgs/uploadGlobe";
 
 const IndexPage = () => {
   const router = useRouter();
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [albumName, setAlbumName] = useState("");
   const [livePhoto, setLivePhoto] = useState("");
+
+  const [activeUploadButton, setActiveUploadButton] = useState(false);
+  const [activeUploadPhotos, setActiveUploadPhotos] = useState(false);
+  const [activeLivePhoto, setActiveLivePhoto] = useState(false);
+  const [activeBackButton, setActiveBackButton] = useState(false);
+
+
+ const handleActiveUploadButton = () => {
+    setActiveUploadButton(!activeUploadButton);
+ }
+
+ const handleActiveUploadPhotos = () => {
+    setActiveUploadPhotos(!activeUploadPhotos);
+ }
+
+ const handleActiveLivePhoto = () => {
+    setActiveLivePhoto(!activeLivePhoto);
+ }
+
 
   const handleFileChange = (event) => {
     console.log("handlefileChanges")
@@ -233,25 +252,65 @@ const IndexPage = () => {
 
   return (
     <div id="imagePageContainer">
+        <div className="logoSection">
+        <div id="logoContainer">
+        <img id="logo" src="/logo.png" alt="JourneyAI"/>
+        </div>
+        </div>
       <div id="title">
         <h1>
           Create your journey
         </h1>
       </div>
+      {(!activeLivePhoto && !activeUploadPhotos) &&(
+
+      <div className="buttonSection">
+        <div className="btnContainer">
+        <Button className="selectButton" onClick={handleActiveUploadPhotos}>Upload Images</Button>
+        </div>
+        <div className="btnContainer">
+        <Button className="selectButton" onClick={handleActiveLivePhoto}>Take a Live Photo</Button>
+        </div>
+
+      </div>)}
+      {(activeLivePhoto || activeUploadPhotos) &&(
       <div id="textInputContainer">
-        <TextField
+        <input
           id="textInput"
           type="text"
           placeholder="Enter album name"
           value={albumName}
           onChange={handleAlbumNameChange}
+          required
         />
-      </div>
-      <div>
-        <WebcamCapture livePhotoChange={livePhotoChange} />
+      </div> )}
+      <div className="bottomSection">
+        {activeLivePhoto &&(
+        <div>
+        <WebcamCapture livePhotoChange={livePhotoChange}/>
+        
+        </div> )}
+        {activeUploadPhotos &&(
+            <div className="fileBoxSection">                
         <UploadFileBox onChange={handleFileChange} />
+        {/* <div className="backButtonContainer">
+        <Button className="selectButton" onClick={handleActiveUploadPhotos}>Back</Button>
+        </div> */}
+        </div>
+        )}
+         {(activeLivePhoto || activeUploadPhotos) &&(
+            <div className="end">
+        <div className="bottomButtons">
+        <div className="backButtonContainer btnContainer">
+            <Button className="backButton" onClick={() => {setActiveLivePhoto(false);
+            setActiveUploadPhotos(false);
+            }}>Back</Button>
+        </div>
+      <div className="btnContainer">
+        <Button className="uploadButton" onClick={handleUpload}>Upload</Button>
       </div>
-      {selectedFiles.length > 0 && (
+      </div>
+      {selectedFiles.length > 0 && activeUploadPhotos && (
         <div>
           <h2>Selected Files:</h2>
           <ul>
@@ -264,8 +323,8 @@ const IndexPage = () => {
           </ul>
         </div>
       )}
-      <div className="btnContainer">
-        <Button className="uploadButton" onClick={handleUpload}>Upload</Button>
+      </div>
+      )}
       </div>
     </div>
   );

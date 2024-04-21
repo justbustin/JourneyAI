@@ -4,11 +4,12 @@
 #choicesPageContainer {
     display: flex;
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     flex-direction: column;
     justify-content: start;
     background-size: cover;
     background-position: center;
+    background-color: #333333;
 }
 
 // .link:hover::after {
@@ -65,7 +66,7 @@
     position: fixed;
     bottom: 0;
     right: 0; /* Adjust horizontal distance from the right */
-    z-index: -1;
+    z-index: 1;
     display: flex;
     flex-direction: row;
     justify-content: end;
@@ -94,24 +95,6 @@
     text-transform: underline;
 }
 
-
-.logoSection {
-    width: 100%;
-}
-
-#logo {
-    padding: 40px 20px 20px 20px;
-    width: 50%;
-    height: 100%;
-    object-fit: contain;
-    pointer-events: none;
-}
-    
-
-#logo {
-    opacity: 1; /* Start with opacity 0 to make the text invisible */
-}
-
 .markerContainer {
     width: 100%;
     display: flex;
@@ -134,4 +117,14 @@
 
 p:hover {
     text-decoration: underline;
+}
+.logoSection {
+    width: 100%;
+}
+
+#logo {
+    padding: 10px;
+    width: 30%;
+    height: 100%;
+    object-fit: contain;
 }

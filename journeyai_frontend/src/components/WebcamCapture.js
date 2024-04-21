@@ -1,14 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Webcam from 'react-webcam';
+import { Button } from '@mui/material';
+import "../styles/webcam.scss"
 
 const WebcamCapture = ({livePhotoChange}) => {
   const webcamRef = useRef(null);
   const [capturedImage, setCapturedImage] = useState(null);
-  const [isCapturing, setIsCapturing] = useState(false);
+  const [isCapturing, setIsCapturing] = useState(true);
 
-  const startCapture = () => {
-    setIsCapturing(true);
-  };
+  // const startCapture = () => {
+  //   setIsCapturing(true);
+  // };
 
   const capture = () => {
     const imageSrc = webcamRef.current.getScreenshot();
@@ -19,27 +21,29 @@ const WebcamCapture = ({livePhotoChange}) => {
 
   const retake = () => {
     setCapturedImage(null);
+    setIsCapturing(true);
   };
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', minHeight: '0px' }}>
-      {!capturedImage && !isCapturing && (
+      {/* {!capturedImage && !isCapturing && (
         <button className="captureButton" style={styles.captureButton} onClick={startCapture}>Capture A Live Photo</button>
-      )}
+      )} */}
       {isCapturing && (
         <div>
           <Webcam
+            className='webcam'
             audio={false}
             ref={webcamRef}
             screenshotFormat="image/jpeg"
           />
-          <button className="captureButton" style={styles.captureButton} onClick = {capture}>Capture</button>
+          <Button className="captureButton" onClick ={capture}>Capture</Button>
         </div>
       )}
       {capturedImage && !isCapturing && (
         <>
-          <img src={capturedImage} alt="Captured" />
-          <button className="captureButton" style={styles.captureButton} onClick={retake}>Retake</button>
+          <img src={capturedImage} className="webcam" alt="Captured" />
+          <Button className="captureButton" onClick={retake}>Retake</Button>
         </>
       )}
     </div>

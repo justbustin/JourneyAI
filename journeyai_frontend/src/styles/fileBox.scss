@@ -1,0 +1,16 @@
+@import "globals.scss";
+
+.fileInputContainer {
+    border-radius: 16px;
+    border: 1px solid #537647;
+    width: 100%;
+    text-align: center;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.fileBox {
+    height: 100%;
+}
