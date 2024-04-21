@@ -7,8 +7,8 @@ import "../styles/selectTrips.scss";
 
 const trips = [
   { id: 1, name: 'japantrip' },
-  { id: 2, name: 'asiatrip' },
-  { id: 3, name: 'vietnamtrip' },
+  { id: 2, name: 'asia4' },
+  { id: 3, name: 'asia5' },
   // Add more trips here
 ];
 
