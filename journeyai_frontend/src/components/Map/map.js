@@ -130,11 +130,11 @@ const Map = ({ album }) => {
   return (
     <div className='mapContainer'>
       {
-        hovering && <ImageHover generatedText={generatedText[index]} />
+        hovering && <ImageHover generatedText={generatedText[index]} coords={coords} />
       }
       {
         coords.length > 0 &&
-        <MapContainer center={[coords[0][0], coords[0][1]]} zoom={13} style={{ height: '100%' }} closePopupOnClick>
+        <MapContainer center={[coords[0][0], coords[0][1]]} zoom={13} style={{ height: '100%', flexGrow: 1 }} closePopupOnClick>
           <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png" />
           {coords.map((coord, index) => (
             <Marker eventHandlers={{ click: () => handleMarkerClick(index) }} key={index} position={coord} icon={customIcon(imageURLs[index])} />
