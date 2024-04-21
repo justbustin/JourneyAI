@@ -90,16 +90,16 @@ const IndexPage = () => {
           console.log(error.message);
         },
         () => {
-          let customMetadata ={}
+          let customMetadata = {}
 
-          if(metaDataObject.GPSLatitude == null){
+          if (metaDataObject.GPSLatitude == null) {
             customMetadata = {
               time: metaDataObject.DateTimeOriginal,
               latitude: "34.0699",
               longitude: "118.4438"
             };
           }
-          else{
+          else {
             customMetadata = {
               time: metaDataObject.DateTimeOriginal,
               latitude: metaDataObject.GPSLatitude.toString(),
@@ -107,7 +107,7 @@ const IndexPage = () => {
             };
           }
 
-          updateMetadata(storageRef, {customMetadata})
+          updateMetadata(storageRef, { customMetadata })
             .then((metadata) => {
               console.log("Metadata updated successfully");
               console.log(metadata);
@@ -119,7 +119,7 @@ const IndexPage = () => {
           const collectionRef = collection(firestore, `${albumName}`);
           const customDocId = `photo1YAAAYYY`;
           const dataToStore = {
-              message: ''
+            message: ''
           };
 
           const docRef = doc(collectionRef, customDocId);
@@ -227,7 +227,7 @@ const IndexPage = () => {
         });
       });
 
-      router.push(`/info?album=${albumName}`);
+      setTimeout(() => router.push(`/info?album=${albumName}`), 2000);
     }
   };
 
@@ -247,7 +247,7 @@ const IndexPage = () => {
           onChange={handleAlbumNameChange}
         />
       </div>
-      <WebcamCapture livePhotoChange={livePhotoChange}/>
+      <WebcamCapture livePhotoChange={livePhotoChange} />
       <UploadFileBox onChange={handleFileChange} />
       {selectedFiles.length > 0 && (
         <div>
