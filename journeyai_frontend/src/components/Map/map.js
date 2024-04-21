@@ -35,15 +35,20 @@ const Map = ({ album }) => {
     const getList = async () => {
       const listRef = ref(storage, album);
       const list = await listAll(listRef);
-      list.items.forEach(async (item) => {
+      const temp_urls = [];
+      const temp_coords = [];
+      for (let i = 0; i < list.items.length; i++) {
+        const item = list.items[i];
         const url = await getDownloadURL(item);
         const metadata = await getMetadata(item);
-        console.log(metadata);
-        setImageURLs([...imageURLs, url]);
+        temp_urls.push(url);
         const coord = [ParseDMS(metadata.customMetadata.latitude), ParseDMS(metadata.customMetadata.longitude)];
-        console.log(coord);
-        setCoords([...coords, coord]);
-      })
+        temp_coords.push(coord);
+      }
+      setImageURLs(temp_urls);
+      setCoords(temp_coords);
+
+
     };
     getList();
   }, [])
@@ -72,12 +77,16 @@ const Map = ({ album }) => {
     });
   });
 
-  const customIcon = L.icon({
-    iconUrl: '/marker.png', // URL or path to the icon image
-    iconSize: [26.72, 40], // Size of the icon
-    iconAnchor: [20, 40], // Anchor point of the icon, relative to its top left corner
-    popupAnchor: [0, -40] // Popup anchor point, relative to the icon's anchor
-  });
+  const customIcon = (url) => {
+    console.log(coords);
+    console.log(url);
+    return L.icon({
+      iconUrl: url, // URL or path to the icon image
+      iconSize: [100, 160], // Size of the icon
+      iconAnchor: [20, 40], // Anchor point of the icon, relative to its top left corner
+      popupAnchor: [0, -40] // Popup anchor point, relative to the icon's anchor
+    });
+  }
 
 
   const handleMarkerClick = () => {
@@ -87,19 +96,12 @@ const Map = ({ album }) => {
 
   return (
     <div className='mapContainer'>
-      <div>
-        {imageURLs.map((imageURL) => {
-          return (
-            <img src={imageURL} />
-          )
-        })}
-      </div>
       {
         coords.length > 0 &&
         <MapContainer center={[coords[0][0], coords[0][1]]} zoom={13} style={{ height: '100%' }} closePopupOnClick>
           <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png" />
           {coords.map((coord, index) => (
-            <Marker eventHandlers={{ click: handleMarkerClick }} key={index} position={[coord[0], coord[1]]} icon={customIcon} />
+            <Marker eventHandlers={{ click: handleMarkerClick }} key={index} position={coord} icon={customIcon(imageURLs[index])} />
           ))}
           <Polyline positions={coords.map(coord => [coord[0], coord[1]])} color="green" />
         </MapContainer>
