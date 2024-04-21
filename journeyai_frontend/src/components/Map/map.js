@@ -3,11 +3,10 @@ import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css'; // Import routing machine CSS
 import "../../styles/map.scss"
-
+import ImageHover from '../ImageHover';
 import { storage, firestore } from "../../app/firebase";
 import { ref, listAll, getDownloadURL, getMetadata } from 'firebase/storage';
 import { collection, onSnapshot } from "firebase/firestore";
-import { listItemSecondaryActionClasses } from '@mui/material';
 
 
 // Dynamically import the ReactLeafletRouting component with ssr set to false
@@ -28,6 +27,7 @@ function ParseDMS(input) {
 }
 
 const Map = ({ album }) => {
+  const [hovering, setHovering] = useState(false);
   const [imageURLs, setImageURLs] = useState([]);
   const [coords, setCoords] = useState([])
 
@@ -91,11 +91,14 @@ const Map = ({ album }) => {
 
   const handleMarkerClick = () => {
     console.log('Marker clicked!');
-    // Add your custom logic here
+    setHovering(true);
   };
 
   return (
     <div className='mapContainer'>
+      {
+        hovering && <ImageHover />
+      }
       {
         coords.length > 0 &&
         <MapContainer center={[coords[0][0], coords[0][1]]} zoom={13} style={{ height: '100%' }} closePopupOnClick>
