@@ -2,23 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css'; // Import routing machine CSS
-import Routing from './route';
 import "../../styles/map.scss"
 
-import { storage, firestore} from "../../app/firebase";
+import { storage, firestore } from "../../app/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 
 
 // Dynamically import the ReactLeafletRouting component with ssr set to false
 
-const Map = ({points}) => {
+const Map = ({ points, album }) => {
 
-  const collectionRef = collection(firestore, "123");
+  const collectionRef = collection(firestore, album);
   const watcher = onSnapshot(collectionRef, (snapshot) => {
     snapshot.docChanges().forEach((change) => {
       const doc = change.doc;
       const docData = doc.data();
-  
+
       // Handle changes based on the change type
       switch (change.type) {
         case "added":
@@ -36,11 +35,11 @@ const Map = ({points}) => {
       }
     });
   });
-  
+
 
   const startPoint = [51.505, -0.09];
   const endPoint = [51.51, -0.1];
-  
+
   const [text, setText] = ("");
 
   useEffect(() => {
@@ -66,12 +65,11 @@ const Map = ({points}) => {
       <div>
         {text}
       </div>
-      <MapContainer center={[points[0][0],points[0][1]]} zoom={13} style={{ height: '100%' }} closePopupOnClick>
-        <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"/>
+      <MapContainer center={[points[0][0], points[0][1]]} zoom={13} style={{ height: '100%' }} closePopupOnClick>
+        <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png" />
         {points.map((point, index) => (
-        <Marker eventHandlers={{ click: handleMarkerClick }} key={index} position={[point[0], point[1]]} icon={customIcon} />
-      ))}
-        {/* <Routing points={points} /> */}
+          <Marker eventHandlers={{ click: handleMarkerClick }} key={index} position={[point[0], point[1]]} icon={customIcon} />
+        ))}
         <Polyline positions={points.map(point => [point[0], point[1]])} color="green" />
       </MapContainer>
     </div>

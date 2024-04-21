@@ -80,7 +80,7 @@ const IndexPage = () => {
         });
       });
 
-      router.push("/info");
+      router.push(`/info?album=${albumName}`);
     }
   };
 
