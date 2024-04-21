@@ -2,6 +2,7 @@
 import React from 'react';
 import TripSlider from '../components/tripSlider';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import PastMap from '@/components/pastTrips';
 
 const trips = [
   { id: 1, name: 'XDD' },
@@ -17,7 +18,7 @@ const selectTrip = () => {
       <TripSlider trips={trips} />
       <div className="mapContainer">
         {/* Render your map background image here */}
-        <img src="/map.jpg" alt="Map Background" className="mapBackground" />
+        <PastMap/>
       </div>
 
       <style jsx>{`
@@ -25,11 +26,15 @@ const selectTrip = () => {
           position: relative;
           height: 100vh;
           width: 100vw;
+          z-index: 10;
+          background-color: #333333;
         }
 
         .mapContainer {
           height: 100%;
           width: 100%;
+          z-index: -1;
+          position: absolute;
         }
 
         .mapBackground {
