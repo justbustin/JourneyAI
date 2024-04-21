@@ -184,8 +184,10 @@ const IndexPage = () => {
         }
       };
 
-      runPythonScript();
-      setTimeout(() => router.push(`/info?album=${albumName}&length=1`), 2000);
+      setTimeout(() => {
+        router.push(`/info?album=${albumName}&length=${selectedFiles.length}`)
+        runPythonScript();
+      }, 2000);
 
       // Your existing upload logic with the captured imageFile
     }
@@ -262,8 +264,11 @@ const IndexPage = () => {
         }
       };
 
-      runPythonScript();
-      setTimeout(() => router.push(`/info?album=${albumName}&length=${selectedFiles.length}`), 2000);
+      
+      setTimeout(() => {
+        router.push(`/info?album=${albumName}&length=${selectedFiles.length}`)
+        runPythonScript();
+      }, 5500);
     }
   }; 
 

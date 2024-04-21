@@ -56,8 +56,15 @@ def call_gemini(photo):
     img = PIL.Image.open(image_buffer)
 
     model = genai.GenerativeModel('gemini-1.5-pro-latest')
+    
+    system = """Generate a response that is a JSON file that is an array of JSON objects. Each object should contain 4 fields, the first field being the location name with the label 'name' and be as specific as possible, the second field being the description of what the image is looking at with the label 'description' and be sure to note any recognizable land mark or famous thing in the photo if any, the third field being a description with the label 'facts', the fourth field being things to do around the area with the label being 'events', and the fifth being the name of the location or landmark with the label 'landmark'. If the the location is not well known or not a well known place, then set 'landmark' to null. The facts should be interesting and detailed. The events should be specific to that area and close in proximity to the provided location. All the keys in the JSON object should be camel case if it is multiple words."""
+    
+    prompt = """You are a location information bank. Describe what the image is looking at, and using the coordinates {} {}
+      to assist in that process. The main response is interesting facts about that specific thing in the image if it is recognizable, 
+      but otherwise say interesting facts about the surrounding area such as things to do or facts. Keep the information precise to the 
+      location without going too far from it. Keep the max word count to 350. {}""".format(photo.latty, photo.longy, system)
 
-    response = model.generate_content(["Describe the location and area associated using what can be seen in the image, but most importantly from the longitude and latitude given. ignore people if any. Provide fun facts about the specific landmarks so that user can look into each thing more. latitude: " + photo.latty + " longitude: " + photo.longy, img], stream=True)
+    response = model.generate_content([prompt, img], stream=True)
     response.resolve()
     print(response.text)
     return response.text
