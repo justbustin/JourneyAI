@@ -13,6 +13,7 @@ from firebase_admin import db
 
 import os
 import PIL.Image
+import time
 
 import firebase_admin
 from firebase_admin import credentials, storage
@@ -105,9 +106,8 @@ async def handle_request(ctx: Context, sender: str, request=QueryRequest):
     photos = get_photos(request.message)
     reordered_photos = reorder_photos(photos)
     for photo in reordered_photos:
-        print('test', photo)
-        print('test2', photo["latitude"])
         await ctx.send(GEMINI_AGENT, Photo(name=photo["name"], time=photo["time"], latty=photo["latitude"], longy=photo["longitude"]))
+        time.sleep(4)
 
 
 if __name__ == "__main__":
