@@ -47,8 +47,8 @@ const IndexPage = () => {
             () => {
               const customMetadata = {
                 time: metaDataObject.DateTimeOriginal,
-                latitude: metaDataObject.GPSLatitude ? metaDataObject.GPSLatitude.toString() : "34.05",
-                longitude: metaDataObject.GPSLongitude ? metaDataObject.GPSLongitude.toString() : "-118.24",
+                latitude: metaDataObject.GPSLatitude ? `${metaDataObject.GPSLatitude.toString()},${metaDataObject.GPSLatitudeRef.toString()}` : "34,4,20.07,N",
+                longitude: metaDataObject.GPSLongitude ? `${metaDataObject.GPSLongitude.toString()},${metaDataObject.GPSLongitudeRef.toString()}` : "118,21,30.37,W",
               };
 
               updateMetadata(storageRef, { customMetadata })

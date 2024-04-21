@@ -5,12 +5,48 @@ import 'leaflet-routing-machine/dist/leaflet-routing-machine.css'; // Import rou
 import "../../styles/map.scss"
 
 import { storage, firestore } from "../../app/firebase";
+import { ref, listAll, getDownloadURL, getMetadata } from 'firebase/storage';
 import { collection, onSnapshot } from "firebase/firestore";
+import { listItemSecondaryActionClasses } from '@mui/material';
 
 
 // Dynamically import the ReactLeafletRouting component with ssr set to false
+function ConvertDMSToDD(degrees, minutes, seconds, direction) {
+  const dd = Number(degrees) + Number(minutes) / 60 + Number(seconds) / 3600;
 
-const Map = ({ points, album }) => {
+  if (direction == "S" || direction == "W") {
+    return -dd;
+  }
+
+  return dd;
+}
+
+function ParseDMS(input) {
+  const parts = input.split(",");
+  const latOrLong = ConvertDMSToDD(parts[0], parts[1], parts[2], parts[3]);
+  return latOrLong;
+}
+
+const Map = ({ album }) => {
+  const [imageURLs, setImageURLs] = useState([]);
+  const [coords, setCoords] = useState([])
+
+  useEffect(() => {
+    const getList = async () => {
+      const listRef = ref(storage, album);
+      const list = await listAll(listRef);
+      list.items.forEach(async (item) => {
+        const url = await getDownloadURL(item);
+        const metadata = await getMetadata(item);
+        console.log(metadata);
+        setImageURLs([...imageURLs, url]);
+        const coord = [ParseDMS(metadata.customMetadata.latitude), ParseDMS(metadata.customMetadata.longitude)];
+        console.log(coord);
+        setCoords([...coords, coord]);
+      })
+    };
+    getList();
+  }, [])
 
   const collectionRef = collection(firestore, album);
   const watcher = onSnapshot(collectionRef, (snapshot) => {
@@ -36,17 +72,6 @@ const Map = ({ points, album }) => {
     });
   });
 
-
-  const startPoint = [51.505, -0.09];
-  const endPoint = [51.51, -0.1];
-
-  const [text, setText] = ("");
-
-  useEffect(() => {
-
-  }, [text]);
-
-
   const customIcon = L.icon({
     iconUrl: '/marker.png', // URL or path to the icon image
     iconSize: [26.72, 40], // Size of the icon
@@ -63,15 +88,22 @@ const Map = ({ points, album }) => {
   return (
     <div className='mapContainer'>
       <div>
-        {text}
+        {imageURLs.map((imageURL) => {
+          return (
+            <img src={imageURL} />
+          )
+        })}
       </div>
-      <MapContainer center={[points[0][0], points[0][1]]} zoom={13} style={{ height: '100%' }} closePopupOnClick>
-        <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png" />
-        {points.map((point, index) => (
-          <Marker eventHandlers={{ click: handleMarkerClick }} key={index} position={[point[0], point[1]]} icon={customIcon} />
-        ))}
-        <Polyline positions={points.map(point => [point[0], point[1]])} color="green" />
-      </MapContainer>
+      {
+        coords.length > 0 &&
+        <MapContainer center={[coords[0][0], coords[0][1]]} zoom={13} style={{ height: '100%' }} closePopupOnClick>
+          <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png" />
+          {coords.map((coord, index) => (
+            <Marker eventHandlers={{ click: handleMarkerClick }} key={index} position={[coord[0], coord[1]]} icon={customIcon} />
+          ))}
+          <Polyline positions={coords.map(coord => [coord[0], coord[1]])} color="green" />
+        </MapContainer>
+      }
     </div>
   );
 };
