@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   if (method === 'GET') {
     try {
       // Execute Python code using python-shell
-      const pythonScript = '../../../../agents/on_query.py';
+      const pythonScript = '../../../../agents/';
       const options = {
         mode: 'text',
         pythonOptions: ['-u'], // get print results in real-time

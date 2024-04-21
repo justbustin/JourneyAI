@@ -75,7 +75,10 @@ const IndexPage = () => {
               console.log("about to run pythno")
               const runPythonScript = async () => {
                 try {
-                  const res = await fetch('/api/python2');
+
+                  const queryString = "hello XD"
+
+                  const res = await fetch(`/api/python2?${albumName}`);
                   const data = await res.json();
                   console.log(data.message); // Output: "Python script executed successfully"
                 } catch (error) {
