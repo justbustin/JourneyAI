@@ -6,7 +6,7 @@
     width: 100%;
     min-height: 100vh;
     flex-direction: column;
-    justify-content: start;
+    justify-content: flex-start;
     background-size: cover;
     background-position: center;
     background-color: #333333;
@@ -24,7 +24,7 @@
 .link {
     display: flex;
     flex-direction: column;
-    justify-content: start;
+    justify-content: flex-start;
     align-content: center;
 }
 
@@ -34,7 +34,7 @@
     margin-top: 4em;
     display: flex;
     flex-direction: row;
-    justify-content: start;
+    justify-content: flex-start;
 }
 
 .typingContainer {
@@ -99,7 +99,7 @@
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: start;
+    justify-content: flex-start;
     align-content: center;
 }
 

@@ -254,7 +254,9 @@ const IndexPage = () => {
     <div id="imagePageContainer">
         <div className="logoSection">
         <div id="logoContainer">
+            <a href="/choices">
         <img id="logo" src="/logo.png" alt="JourneyAI"/>
+        </a>
         </div>
         </div>
       <div id="title">

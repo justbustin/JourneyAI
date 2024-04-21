@@ -30,10 +30,11 @@ const TripSlider = ({ trips }) => {
           left: 0;
           height: 100vh;
           width: 300px;
-          background-color: rgba(255, 255, 255, 0.8);
+          background-color: rgba(51,51,51,0.8);
           padding: 20px;
           z-index: 1;
           overflow-y: auto;
+          color: white;
         }
 
         .tripList {
@@ -47,7 +48,7 @@ const TripSlider = ({ trips }) => {
         }
 
         .tripItem:hover {
-          background-color: #f0f0f0;
+          background-color: #333333;
         }
       `}</style>
     </div>
