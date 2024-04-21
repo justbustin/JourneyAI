@@ -3,11 +3,11 @@ import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css'; // Import routing machine CSS
 import "../../styles/map.scss"
-import ImageHover from '../ImageHover';import { useSearchParams } from "next/navigation";
+import ImageHover from '../ImageHover'; import { useSearchParams } from "next/navigation";
 
 import { storage, firestore } from "../../app/firebase";
 import { ref, listAll, getDownloadURL, getMetadata } from 'firebase/storage';
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, setIndexConfiguration } from "firebase/firestore";
 
 
 // Dynamically import the ReactLeafletRouting component with ssr set to false
@@ -32,7 +32,8 @@ const Map = ({ album }) => {
   const [imageURLs, setImageURLs] = useState([]);
   const [coords, setCoords] = useState([])
   const [loading, setLoading] = useState(true)
-  const [generatedText, setGeneratedText] = useState("test")
+  const [generatedText, setGeneratedText] = useState([])
+  const [index, setIndex] = useState(0);
 
   const searchParams = useSearchParams();
 
@@ -69,14 +70,16 @@ const Map = ({ album }) => {
     const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
       console.log("Current number of documents:", snapshot.size);
 
+      const temp_text = []
       snapshot.docChanges().forEach((change) => {
         const doc = change.doc;
+        console.log(doc);
         const docData = doc.data();
-        
+
         switch (change.type) {
           case "added":
             console.log("Document added:", docData);
-            setGeneratedText(docData.text);
+            temp_text.push(docData.text);
             break;
           case "modified":
             console.log("Document modified:", docData);
@@ -86,6 +89,9 @@ const Map = ({ album }) => {
             break;
         }
       });
+      console.log(temp_text);
+
+      setGeneratedText([...generatedText, ...temp_text]);
 
       // Example: Update loading state based on a condition
       if (snapshot.size - 1 === parseInt(searchParams.get("length"))) {
@@ -115,22 +121,23 @@ const Map = ({ album }) => {
   }
 
 
-  const handleMarkerClick = () => {
+  const handleMarkerClick = (index) => {
     console.log('Marker clicked!');
     setHovering(!hovering);
+    setIndex(index);
   };
 
   return (
     <div className='mapContainer'>
       {
-        hovering && <ImageHover generatedText={generatedText}/>
+        hovering && <ImageHover generatedText={generatedText[index]} coords={coords} />
       }
       {
         coords.length > 0 &&
-        <MapContainer center={[coords[0][0], coords[0][1]]} zoom={13} style={{ height: '100%' }} closePopupOnClick>
+        <MapContainer center={[coords[0][0], coords[0][1]]} zoom={13} style={{ height: '100%', flexGrow: 1 }} closePopupOnClick>
           <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png" />
           {coords.map((coord, index) => (
-            <Marker eventHandlers={{ click: handleMarkerClick }} key={index} position={coord} icon={customIcon(imageURLs[index])} />
+            <Marker eventHandlers={{ click: () => handleMarkerClick(index) }} key={index} position={coord} icon={customIcon(imageURLs[index])} />
           ))}
           <Polyline positions={coords.map(coord => [coord[0], coord[1]])} color="green" />
         </MapContainer>
