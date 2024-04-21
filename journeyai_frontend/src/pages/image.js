@@ -109,24 +109,24 @@ const IndexPage = () => {
           console.log(error.message);
         },
         () => {
-          let customMetadata ={}
+          let customMetadata = {}
 
-          if(metaDataObject.GPSLatitude == null){
+          if (metaDataObject.GPSLatitude == null) {
             customMetadata = {
-              time: metaDataObject.DateTimeOriginal,
-              latitude: "34.0699",
-              longitude: "118.4438"
+              time: metaDataObject.DateTimeOriginal ? metaDataObject.DateTimeOriginal : "2024:04:05 23:24:40",
+              latitude: "34,4,20.07,N",
+              longitude: "118,21,30.37,W",
             };
           }
-          else{
-            customMetadata = {
-              time: metaDataObject.DateTimeOriginal,
-              latitude: metaDataObject.GPSLatitude.toString(),
-              longitude: metaDataObject.GPSLongitude.toString()
+          else {
+            const customMetadata = {
+              time: metaDataObject.DateTimeOriginal ? metaDataObject.DateTimeOriginal : "2024:04:05 23:24:40",
+              latitude: "34,4,20.07,N",
+              longitude: "118,21,30.37,W",
             };
           }
 
-          updateMetadata(storageRef, {customMetadata})
+          updateMetadata(storageRef, { customMetadata })
             .then((metadata) => {
               console.log("Metadata updated successfully");
               console.log(metadata);
@@ -136,9 +136,9 @@ const IndexPage = () => {
             });
 
           const collectionRef = collection(firestore, `${albumName}`);
-          const customDocId = `photo1YAAAYYY`;
+          const customDocId = `length`;
           const dataToStore = {
-              message: ''
+            length: 1
           };
 
           const docRef = doc(collectionRef, customDocId);
@@ -154,8 +154,8 @@ const IndexPage = () => {
             try {
 
               const queryString = "hello XD"
+              const res = await fetch(`/api/python2?album=${albumName}`);
 
-              const res = await fetch(`/api/python2?${albumName}`);
               const data = await res.json();
               console.log(data.message); // Output: "Python script executed successfully"
             } catch (error) {
@@ -168,7 +168,7 @@ const IndexPage = () => {
         }
       );
 
-
+      setTimeout(() => router.push(`/info?album=${albumName}&length=1`), 2000);
 
       // Your existing upload logic with the captured imageFile
     }
@@ -197,7 +197,7 @@ const IndexPage = () => {
             },
             () => {
               const customMetadata = {
-                time: metaDataObject.DateTimeOriginal,
+                time: "2024:04:05 23:24:40",
                 latitude: metaDataObject.GPSLatitude ? `${metaDataObject.GPSLatitude.toString()},${metaDataObject.GPSLatitudeRef.toString()}` : "34,4,20.07,N",
                 longitude: metaDataObject.GPSLongitude ? `${metaDataObject.GPSLongitude.toString()},${metaDataObject.GPSLongitudeRef.toString()}` : "118,21,30.37,W",
               };
@@ -212,9 +212,9 @@ const IndexPage = () => {
                 });
 
               const collectionRef = collection(firestore, `${albumName}`);
-              const customDocId = `${image.name}`;
+              const customDocId = `length`;
               const dataToStore = {
-                message: ''
+                length: selectedFiles.length
               };
 
               const docRef = doc(collectionRef, customDocId);
@@ -230,8 +230,8 @@ const IndexPage = () => {
                 try {
 
                   const queryString = "hello XD"
+                  const res = await fetch(`/api/python2?album=${albumName}`);
 
-                  const res = await fetch(`/api/python2?${albumName}`);
                   const data = await res.json();
                   console.log(data.message); // Output: "Python script executed successfully"
                 } catch (error) {
@@ -246,7 +246,7 @@ const IndexPage = () => {
         });
       });
 
-      router.push(`/info?album=${albumName}`);
+      setTimeout(() => router.push(`/info?album=${albumName}&length=${selectedFiles.length}`), 2000);
     }
   };
 

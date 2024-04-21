@@ -3,10 +3,11 @@ import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css'; // Import routing machine CSS
 import "../../styles/map.scss"
-import ImageHover from '../ImageHover';
+import ImageHover from '../ImageHover'; import { useSearchParams } from "next/navigation";
+
 import { storage, firestore } from "../../app/firebase";
 import { ref, listAll, getDownloadURL, getMetadata } from 'firebase/storage';
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, setIndexConfiguration } from "firebase/firestore";
 
 
 // Dynamically import the ReactLeafletRouting component with ssr set to false
@@ -30,6 +31,11 @@ const Map = ({ album }) => {
   const [hovering, setHovering] = useState(false);
   const [imageURLs, setImageURLs] = useState([]);
   const [coords, setCoords] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [generatedText, setGeneratedText] = useState([])
+  const [index, setIndex] = useState(0);
+
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const getList = async () => {
@@ -54,28 +60,54 @@ const Map = ({ album }) => {
   }, [])
 
   const collectionRef = collection(firestore, album);
-  const watcher = onSnapshot(collectionRef, (snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-      const doc = change.doc;
-      const docData = doc.data();
+  console.log("albumname test", album)
+  console.log("RAHHHHH", collectionRef)
 
-      // Handle changes based on the change type
-      switch (change.type) {
-        case "added":
-          console.log("Document added:", docData);
-          // Perform actions for a new document
-          break;
-        case "modified":
-          console.log("Document modified:", docData);
-          // Perform actions for a modified document
-          break;
-        case "removed":
-          console.log("Document removed:", docData);
-          // Perform actions for a removed document
-          break;
+  useEffect(() => {
+    const collectionRef = collection(firestore, album);
+    console.log("Setting up listener for album:", album);
+
+    const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+      console.log("Current number of documents:", snapshot.size);
+
+      const temp_text = []
+      snapshot.docChanges().forEach((change) => {
+        const doc = change.doc;
+        console.log(doc);
+        const docData = doc.data();
+
+        switch (change.type) {
+          case "added":
+            console.log("Document added:", docData);
+            temp_text.push(docData.text);
+            break;
+          case "modified":
+            console.log("Document modified:", docData);
+            break;
+          case "removed":
+            console.log("Document removed:", docData);
+            break;
+        }
+      });
+      console.log(temp_text);
+
+      setGeneratedText([...generatedText, ...temp_text]);
+
+      // Example: Update loading state based on a condition
+      if (snapshot.size - 1 === parseInt(searchParams.get("length"))) {
+        setLoading(false);
+        console.log("GENTEXT AT MAP", generatedText)
+        console.log("alr perfect")
       }
     });
-  });
+
+    // Cleanup function to unsubscribe from the listener when component unmounts or album changes
+    return () => {
+      console.log("Cleaning up listener for album:", album);
+      unsubscribe();
+    };
+  }, [album, searchParams]);  // Dependency array includes `album` and `searchParams` to reset listener when they change
+
 
   const customIcon = (url) => {
     console.log(coords);
@@ -89,22 +121,23 @@ const Map = ({ album }) => {
   }
 
 
-  const handleMarkerClick = () => {
+  const handleMarkerClick = (index) => {
     console.log('Marker clicked!');
-    setHovering(true);
+    setHovering(!hovering);
+    setIndex(index);
   };
 
   return (
     <div className='mapContainer'>
       {
-        hovering && <ImageHover />
+        hovering && <ImageHover generatedText={generatedText[index]} coords={coords} />
       }
       {
         coords.length > 0 &&
-        <MapContainer center={[coords[0][0], coords[0][1]]} zoom={13} style={{ height: '100%' }} closePopupOnClick>
+        <MapContainer center={[coords[0][0], coords[0][1]]} zoom={13} style={{ height: '100%', flexGrow: 1 }} closePopupOnClick>
           <TileLayer url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png" />
           {coords.map((coord, index) => (
-            <Marker eventHandlers={{ click: handleMarkerClick }} key={index} position={coord} icon={customIcon(imageURLs[index])} />
+            <Marker eventHandlers={{ click: () => handleMarkerClick(index) }} key={index} position={coord} icon={customIcon(imageURLs[index])} />
           ))}
           <Polyline positions={coords.map(coord => [coord[0], coord[1]])} color="green" />
         </MapContainer>

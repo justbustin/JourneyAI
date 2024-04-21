@@ -4,7 +4,7 @@ import { Button, TextField } from '@mui/material';
 import "../styles/imageHover.scss";
 
 
-const ImageHover = () => {
+const ImageHover = ({ generatedText, coords }) => {
   const [chat, setChat] = useState(null);
   const [message, setMessage] = useState("");
   const [history, setHistory] = useState([]);
@@ -13,6 +13,7 @@ const ImageHover = () => {
   const [askQuestion, setAskQuestion] = useState(false);
 
   useEffect(() => {
+    console.log("gentext", generatedText)
     const chat = model.startChat({
       history: [
         {
@@ -21,7 +22,7 @@ const ImageHover = () => {
         },
         {
           role: "model",
-          parts: [{ text: "You were in Tokyo, Japan." }],
+          parts: [{ text: generatedText }],
         },
       ],
       generationConfig: {
@@ -48,34 +49,39 @@ const ImageHover = () => {
   }
 
 
-  const handleAskQuestion =  () => {
-    setAskQuestion(!askQuestion) 
+  const handleAskQuestion = () => {
+    setAskQuestion(!askQuestion)
   }
 
   return (
-    <div>
+    <div style={{ width: '25%', height: "100%", overflow: "scroll", color: "#FFFFFF" }}>
       <div>
         {history.map((msg, index) => {
           return (
-            <div key={index}>
-              {msg.role}: {msg.parts[0] == undefined ? "hello" : msg.parts[0].text}
+            <div key={index} style={{ fontWeight: `${(index % 2 == 0) ? "bold" : "normal"}`, padding: 10 }}>
+              {msg.parts[0] == undefined ? "hello" : msg.parts[0].text}
             </div>
           );
         })}
       </div>
-      {!askQuestion && 
-      (
-      <div><Button onClick={() => handleSend("Can you tell me more about this place?")}>Learn More</Button>
-      <Button onClick={() => handleAskQuestion()}>Ask Your Own Question</Button></div>)}
-      {askQuestion &&
-      (<div>
-      <TextField value={message} onChange={(e) => setMessage(e.target.value)} />
-        <Button onClick={() => handleAskQuestion()}> Back </Button>
-      <Button onClick={() => handleSend(message)}>
-        Send
-      </Button>
-      </div>)
-  }
+      {
+        !askQuestion &&
+        (
+          <div className="buttonsContainer">
+            <Button onClick={() => handleSend("Can you tell me more about this place?")}>Learn More</Button>
+            <Button onClick={() => handleAskQuestion()}>Ask Your Own Question</Button>
+          </div>)
+      }
+      {
+        askQuestion &&
+        (<div>
+          <TextField value={message} onChange={(e) => setMessage(e.target.value)} />
+          <Button onClick={() => handleAskQuestion()}> Back </Button>
+          <Button onClick={() => handleSend(message)}>
+            Send
+          </Button>
+        </div>)
+      }
     </div >
   )
 }
